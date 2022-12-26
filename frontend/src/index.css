@@ -1,0 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto';
+}
+
+a.hover-underlined {
+  text-decoration: none;
+}
+
+a.hover-underlined:hover {
+  text-decoration: underline !important;
+}
+
+span.secondary-link:hover {
+  color: inherit;
+}
