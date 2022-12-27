@@ -34,7 +34,7 @@ const coursesApi = createApi({
           result
             ? [
                 ...result.data.data.map((course) => {
-                  return { type: 'course', id: course.id };
+                  return { type: 'course', id: course._id };
                 }),
               ]
             : [],
@@ -52,7 +52,7 @@ const coursesApi = createApi({
           return {
             url: `${course.id}`,
             method: 'PATCH',
-            body: course,
+            body: course.body,
           };
         },
       }),

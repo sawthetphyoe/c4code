@@ -8,8 +8,7 @@ const courseSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  coverImg: String,
-  profileImg: String,
+  image: String,
   lectures: [
     {
       type: mongoose.Schema.ObjectId,

@@ -31,7 +31,7 @@ function HomePage() {
               icon={<SchoolRoundedIcon sx={{ fontSize: 56 }} />}
               mainLink={{
                 name: 'COURSES',
-                path: 'course',
+                path: 'courses',
               }}
               links={[
                 {
