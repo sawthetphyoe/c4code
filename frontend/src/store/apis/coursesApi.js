@@ -52,7 +52,7 @@ const coursesApi = createApi({
           return {
             url: `${course.id}`,
             method: 'PATCH',
-            body: course.body,
+            body: course,
           };
         },
       }),

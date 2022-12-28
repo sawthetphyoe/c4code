@@ -18,7 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SkeletonList from './SkeletonList';
 import ErrorDisplay from './ErrorDisplay';
 
-const tableHeads = ['NAME', 'CATEGORY', 'LAST UPDATED AT', ''];
+const tableHeads = ['NAME', 'CATEGORY', 'STUDENTS', 'LAST UPDATED', '', ''];
 
 function CourseList({ searchTerm }) {
   const { data, error, isFetching } = useGetAllCoursesQuery();
@@ -58,7 +58,10 @@ function CourseList({ searchTerm }) {
           pathName: `${course._id}`,
         },
         course.category.name,
-        course.updatedAt || 'never',
+        0,
+        course.updatedAt
+          ? new Date(course.updatedAt).toLocaleDateString('en-UK')
+          : 'never',
       ];
     });
 

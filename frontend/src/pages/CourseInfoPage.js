@@ -14,17 +14,33 @@ import {
 } from '@mui/material';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useCreateCourseMutation, useGetAllCategoriesQuery } from '../store';
+import {
+  useGetAllCategoriesQuery,
+  useGetCourseQuery,
+  useUpdateCourseMutation,
+} from '../store';
 
 const theme = createTheme();
 
-function AddCoursePage() {
+function CourseInfoPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const [createCourse, createResults] = useCreateCourseMutation();
-  const { data, error, isLoading } = useGetAllCategoriesQuery();
+  const {
+    data: courseData,
+    error: courseError,
+    isLoading: courseLoading,
+  } = useGetCourseQuery(id);
+
+  const {
+    data: categData,
+    error: categError,
+    isLoading: categLoading,
+  } = useGetAllCategoriesQuery();
+
+  const [updateCourse, results] = useUpdateCourseMutation();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -33,14 +49,19 @@ function AddCoursePage() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    if (createResults.isSuccess) navigate('/courses');
-  });
+    if (categData && !categError) {
+      setCategories([...categData.data.data]);
+    }
+    if (courseData && !courseError) {
+      setName(courseData.data.data.name);
+      setDescription(courseData.data.data.description);
+      setCategory(courseData.data.data.category._id);
+    }
+  }, [categData, categError, courseData, courseError]);
 
   useEffect(() => {
-    if (data && !error) {
-      setCategories([...data.data.data]);
-    }
-  }, [data, error]);
+    if (results.isSuccess) navigate('/courses');
+  });
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -60,10 +81,8 @@ function AddCoursePage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    createCourse({ name, description, category, active });
+    updateCourse({ id, name, description, category });
   };
-
-  // if (createResults.isError) console.log(createResults.error);
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: 8 }}>
@@ -73,7 +92,7 @@ function AddCoursePage() {
             { pathName: 'Home', path: '/' },
             { pathName: 'Courses', path: '/courses' },
           ]}
-          currentPage="add course"
+          currentPage={courseData ? courseData.data.data.name : '-'}
         />
         <ThemeProvider theme={theme}>
           <Container component="main" maxWidth="xs" sx={{ paddingBottom: 2 }}>
@@ -88,7 +107,7 @@ function AddCoursePage() {
               sx={{ mt: 5 }}
             >
               <Grid item sm={12}>
-                {isLoading ? (
+                {categLoading || courseLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
                   <TextField
@@ -103,7 +122,7 @@ function AddCoursePage() {
               </Grid>
 
               <Grid item sm={12}>
-                {isLoading ? (
+                {categLoading || courseLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
                   <TextField
@@ -124,7 +143,7 @@ function AddCoursePage() {
               </Grid>
 
               <Grid item sm={12}>
-                {isLoading ? (
+                {categLoading || courseLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
                   <TextField
@@ -138,7 +157,7 @@ function AddCoursePage() {
                 )}
               </Grid>
               <Grid item sm={6}>
-                {isLoading ? (
+                {categLoading || courseLoading ? (
                   <Skeleton height={30} width={200} variant="rectangular" />
                 ) : (
                   <FormControlLabel
@@ -153,7 +172,7 @@ function AddCoursePage() {
                 )}
               </Grid>
               <Grid item sm={12}>
-                {isLoading ? (
+                {categLoading || courseLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
                   <Button
@@ -165,19 +184,19 @@ function AddCoursePage() {
                       mb: 2,
                     }}
                     style={{
-                      backgroundColor: createResults.isLoading && 'grey',
+                      backgroundColor: results.isLoading && 'grey',
                     }}
                   >
-                    {createResults.isLoading ? (
+                    {results.isLoading ? (
                       <Box>
-                        adding course
+                        updating course
                         <CircularProgress
                           sx={{ color: 'white', ml: 2 }}
                           size={16}
                         />
                       </Box>
                     ) : (
-                      'add course'
+                      'update course'
                     )}
                   </Button>
                 )}
@@ -190,4 +209,4 @@ function AddCoursePage() {
   );
 }
 
-export default AddCoursePage;
+export default CourseInfoPage;
