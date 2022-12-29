@@ -8,8 +8,6 @@ import {
   Box,
   MenuItem,
   Grid,
-  Checkbox,
-  FormControlLabel,
   Skeleton,
 } from '@mui/material';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
@@ -29,7 +27,6 @@ function AddCoursePage() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
-  const [active, setActive] = useState(false);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -54,19 +51,15 @@ function AddCoursePage() {
     setDescription(e.target.value);
   };
 
-  const handleActiveChange = (e) => {
-    setActive(!active);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    createCourse({ name, description, category, active });
+    createCourse({ name, description, category });
   };
 
   // if (createResults.isError) console.log(createResults.error);
 
   return (
-    <Container maxWidth="sm" sx={{ marginTop: 8 }}>
+    <Container maxWidth="lg" sx={{ marginTop: 8 }}>
       <Paper square>
         <BreadcrumbsBar
           paths={[
@@ -76,7 +69,7 @@ function AddCoursePage() {
           currentPage="add course"
         />
         <ThemeProvider theme={theme}>
-          <Container component="main" maxWidth="xs" sx={{ paddingBottom: 2 }}>
+          <Container component="main" maxWidth="md" sx={{ paddingBottom: 2 }}>
             <CssBaseline />
             <Grid
               container
@@ -84,10 +77,10 @@ function AddCoursePage() {
               component="form"
               onSubmit={handleSubmit}
               autoComplete="off"
-              spacing={2}
-              sx={{ mt: 5 }}
+              spacing={4}
+              sx={{ mt: 3, mb: 5 }}
             >
-              <Grid item sm={12}>
+              <Grid item xs={6}>
                 {isLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
@@ -102,7 +95,9 @@ function AddCoursePage() {
                 )}
               </Grid>
 
-              <Grid item sm={12}>
+              <Grid item sm={6}></Grid>
+
+              <Grid item xs={6}>
                 {isLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
@@ -123,7 +118,7 @@ function AddCoursePage() {
                 )}
               </Grid>
 
-              <Grid item sm={12}>
+              <Grid item xs={12}>
                 {isLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
@@ -137,22 +132,8 @@ function AddCoursePage() {
                   />
                 )}
               </Grid>
-              <Grid item sm={6}>
-                {isLoading ? (
-                  <Skeleton height={30} width={200} variant="rectangular" />
-                ) : (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={active}
-                        onChange={handleActiveChange}
-                      />
-                    }
-                    label="Active"
-                  />
-                )}
-              </Grid>
-              <Grid item sm={12}>
+
+              <Grid item xs={4}>
                 {isLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
@@ -160,10 +141,6 @@ function AddCoursePage() {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    sx={{
-                      mt: 3,
-                      mb: 2,
-                    }}
                     style={{
                       backgroundColor: createResults.isLoading && 'grey',
                     }}

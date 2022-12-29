@@ -8,10 +8,9 @@ import {
   Box,
   MenuItem,
   Grid,
-  Checkbox,
-  FormControlLabel,
   Skeleton,
 } from '@mui/material';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -45,7 +44,6 @@ function CourseInfoPage() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
-  const [active, setActive] = useState(false);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -75,17 +73,13 @@ function CourseInfoPage() {
     setDescription(e.target.value);
   };
 
-  const handleActiveChange = (e) => {
-    setActive(!active);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     updateCourse({ id, name, description, category });
   };
 
   return (
-    <Container maxWidth="sm" sx={{ marginTop: 8 }}>
+    <Container maxWidth="lg" sx={{ marginTop: 8 }}>
       <Paper square>
         <BreadcrumbsBar
           paths={[
@@ -95,7 +89,7 @@ function CourseInfoPage() {
           currentPage={courseData ? courseData.data.data.name : '-'}
         />
         <ThemeProvider theme={theme}>
-          <Container component="main" maxWidth="xs" sx={{ paddingBottom: 2 }}>
+          <Container component="main" maxWidth="md" sx={{ paddingBottom: 2 }}>
             <CssBaseline />
             <Grid
               container
@@ -103,10 +97,10 @@ function CourseInfoPage() {
               component="form"
               onSubmit={handleSubmit}
               autoComplete="off"
-              spacing={2}
-              sx={{ mt: 5 }}
+              spacing={4}
+              sx={{ mt: 3, mb: 5 }}
             >
-              <Grid item sm={12}>
+              <Grid item md={6}>
                 {categLoading || courseLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
@@ -121,7 +115,9 @@ function CourseInfoPage() {
                 )}
               </Grid>
 
-              <Grid item sm={12}>
+              <Grid item xs={6}></Grid>
+
+              <Grid item xs={6}>
                 {categLoading || courseLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
@@ -142,7 +138,7 @@ function CourseInfoPage() {
                 )}
               </Grid>
 
-              <Grid item sm={12}>
+              <Grid item xs={12}>
                 {categLoading || courseLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
@@ -156,22 +152,8 @@ function CourseInfoPage() {
                   />
                 )}
               </Grid>
-              <Grid item sm={6}>
-                {categLoading || courseLoading ? (
-                  <Skeleton height={30} width={200} variant="rectangular" />
-                ) : (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={active}
-                        onChange={handleActiveChange}
-                      />
-                    }
-                    label="Active"
-                  />
-                )}
-              </Grid>
-              <Grid item sm={12}>
+
+              <Grid item xs={4} mt={2}>
                 {categLoading || courseLoading ? (
                   <Skeleton height={60} width={450} variant="rectangular" />
                 ) : (
@@ -179,10 +161,6 @@ function CourseInfoPage() {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    sx={{
-                      mt: 3,
-                      mb: 2,
-                    }}
                     style={{
                       backgroundColor: results.isLoading && 'grey',
                     }}
@@ -200,6 +178,13 @@ function CourseInfoPage() {
                     )}
                   </Button>
                 )}
+              </Grid>
+              <Grid item xs={4} mt={2}></Grid>
+              <Grid item xs={4} mt={2} sx={{ textAlign: 'right' }}>
+                <Button onClick={() => navigate(`/courses/contents/${id}`)}>
+                  Go to course content
+                  <ArrowForwardRoundedIcon sx={{ ml: 1 }} />
+                </Button>
               </Grid>
             </Grid>
           </Container>
