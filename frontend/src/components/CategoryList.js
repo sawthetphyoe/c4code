@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { useGetAllCategoriesQuery, useDeleteCategoryMutation } from '../store';
+import {
+  useGetAllCategoriesQuery,
+  useDeleteCategoryMutation,
+  useGetAllCoursesQuery,
+} from '../store';
 import {
   Box,
   Container,
@@ -12,30 +16,45 @@ import {
   IconButton,
   Alert,
   CircularProgress,
+  Typography,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SkeletonList from './SkeletonList';
 import ErrorDisplay from './ErrorDisplay';
 
-const tableHeads = ['NAME', ''];
+const tableHeads = ['NAME', 'NUMBER OF COURSES', ''];
 
 function UserList({ searchTerm }) {
   const { data, error, isFetching } = useGetAllCategoriesQuery();
   const [deleteCategory, categoryDeleteResults] = useDeleteCategoryMutation();
-  const [deletedId, setDeletedId] = useState('');
 
-  const handleUserDeleteSubmit = (e, id) => {
+  const {
+    data: courseData,
+    error: courseError,
+    isFetching: courseFetching,
+  } = useGetAllCoursesQuery();
+
+  const [deletedId, setDeletedId] = useState('');
+  const [deleteAccess, setDeleteAccess] = useState(true);
+
+  const handleUserDeleteSubmit = (e, data) => {
+    setDeleteAccess(true);
     e.preventDefault();
+    if (data[1] > 0) {
+      setDeleteAccess(false);
+      return;
+    }
+    const id = data[0].pathName;
     deleteCategory(id);
     setDeletedId(id);
   };
 
-  const deleteButton = (id, deleting) => {
+  const deleteButton = (data, deleting) => {
     return (
-      <form onSubmit={(e) => handleUserDeleteSubmit(e, id)}>
+      <form onSubmit={(e) => handleUserDeleteSubmit(e, data)}>
         <IconButton aria-label="delete" type="submit">
-          {deleting && deletedId === id ? (
+          {deleting && deletedId === data[0].pathName ? (
             <CircularProgress size={18} />
           ) : (
             <DeleteIcon />
@@ -45,18 +64,33 @@ function UserList({ searchTerm }) {
     );
   };
 
+  let alert;
+  if (!deleteAccess) {
+    alert = (
+      <Alert severity="error">
+        <Typography variant="h6" sx={{ fontSize: 18 }}>
+          Access Denied! One or more courses are associated with this category.
+        </Typography>
+      </Alert>
+    );
+  } else {
+    alert = '';
+  }
+
   let content;
-  if (isFetching) {
+  if (isFetching || courseFetching) {
     content = <SkeletonList times={6} spacing={2} />;
-  } else if (error) {
+  } else if (error || courseError) {
     content = <ErrorDisplay message={error.data.message} />;
   } else {
+    const courses = courseData.data.data;
     const rows = data.data.data.map((cate) => {
       return [
         {
           name: cate.name,
           pathName: `${cate._id}`,
         },
+        courses.filter((course) => course.category._id === cate._id).length,
       ];
     });
 
@@ -116,7 +150,7 @@ function UserList({ searchTerm }) {
           )}
 
           <TableCell align="right" key={index} sx={{ fontSize: 16 }}>
-            {deleteButton(row[0].pathName, categoryDeleteResults.isLoading)}
+            {deleteButton(row, categoryDeleteResults.isLoading)}
           </TableCell>
         </TableRow>
       ));
@@ -138,7 +172,14 @@ function UserList({ searchTerm }) {
     );
   }
 
-  return <Container maxWidth="xl">{content}</Container>;
+  return (
+    <Container maxWidth="xl">
+      <Container maxWidth="md" sx={{ height: 60 }}>
+        {alert}
+      </Container>
+      {content}
+    </Container>
+  );
 }
 
 export default UserList;

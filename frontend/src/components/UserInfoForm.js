@@ -195,11 +195,10 @@ function UserInfoForm() {
 
   return (
     <ThemeProvider theme={theme}>
-      {
-        <Container maxWidth="md" sx={{ height: 60 }}>
-          {alert}
-        </Container>
-      }
+      <Container maxWidth="md" sx={{ height: 60 }}>
+        {alert}
+      </Container>
+
       <Container
         component="form"
         maxWidth="md"
