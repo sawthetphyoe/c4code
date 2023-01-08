@@ -11,7 +11,7 @@ router
 router
   .route('/:id')
   .get(courseController.getCourse)
-  .patch(courseController.updateCourse)
+  .patch(courseController.uploadCourseImage, courseController.updateCourse)
   .delete(courseController.deleteCourse);
 
 module.exports = router;

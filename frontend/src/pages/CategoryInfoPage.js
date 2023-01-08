@@ -1,174 +1,102 @@
-import { Container, Paper, CssBaseline } from '@mui/material';
-import BreadcrumbsBar from '../components/BreadcrumbsBar';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useGetCategoryQuery } from '../store';
-import {
-  Button,
-  TextField,
-  CircularProgress,
-  Box,
-  Skeleton,
-} from '@mui/material';
+import { useGetCategoryQuery, useUpdateCategoryMutation } from '../store';
 import { useEffect, useState } from 'react';
-import { useUpdateCategoryMutation } from '../store';
-import ErrorDisplay from '../components/ErrorDisplay';
+import { useParams } from 'react-router-dom';
+import { Button, TextField, Container, Paper, Grid } from '@mui/material';
+import BreadcrumbsBar from '../components/BreadcrumbsBar';
+import Error from '../ultis/Error';
+import LoadingBar from '../ultis/LoadingBar';
 
-const theme = createTheme();
+export default function CategoryInfoPage() {
+	const { id } = useParams();
+	const { data, error, isFetching, isLoading } = useGetCategoryQuery(id);
+	const [updateCategory, results] = useUpdateCategoryMutation();
+	const [name, setName] = useState('');
+	const [edit, setEdit] = useState(false);
 
-function CategoryInfoPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+	useEffect(() => {
+		if (data && !error) {
+			setName(data.data.data.name);
+		}
+	}, [data, error]);
 
-  const { data, error, isFetching, isLoading } = useGetCategoryQuery(id);
+	useEffect(() => {
+		if (edit) results.reset();
+	}, [edit, results]);
 
-  const [edit, setEdit] = useState(false);
-  const [name, setName] = useState('');
-  const [updateCategory, results] = useUpdateCategoryMutation();
+	const handleNameChange = (e) => {
+		setName(e.target.value);
+		setEdit(true);
+		results.reset();
+	};
 
-  useEffect(() => {
-    if (data) {
-      setName(data.data.data.name);
-    }
-  }, [data]);
+	const handleCancel = () => {
+		const category = data.data.data;
+		setName(category.name);
+		setEdit(false);
+	};
 
-  useEffect(() => {
-    if (results.isSuccess) navigate('/categories');
-  });
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		setEdit(false);
+		updateCategory({ name, id });
+	};
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-    setEdit(true);
-    results.reset();
-  };
+	if (error) return <Error message={error.data.message} />;
 
-  const handleCancel = () => {
-    setName(category.name);
-    setEdit(false);
-  };
+	if (isLoading) return <LoadingBar />;
 
-  const handleSubmit = (e, id) => {
-    e.preventDefault();
-    setEdit(false);
-    updateCategory({ name, id });
-  };
+	const category = data.data.data;
 
-  let category;
-  let content;
-  if (isLoading) {
-    content = '';
-  } else if (error) {
-    content = <ErrorDisplay message={error.data.message} />;
-  } else {
-    category = data.data.data;
-    content = (
-      <Container maxWidth="sm" sx={{ marginTop: 8 }}>
-        <Paper square>
-          <BreadcrumbsBar
-            paths={[
-              { pathName: 'Home', path: '/' },
-              { pathName: 'Categories', path: '/categories' },
-            ]}
-            currentPage={category.name}
-          />
-          <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs" sx={{ paddingBottom: 2 }}>
-              <CssBaseline />
-              <Box
-                sx={{
-                  marginTop: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-              >
-                <Box
-                  component="form"
-                  onSubmit={(e) => handleSubmit(e, category._id)}
-                  sx={{ mt: 3 }}
-                  autoComplete="off"
-                >
-                  {isFetching ? (
-                    <Skeleton
-                      height={60}
-                      variant="rectangular"
-                      sx={{ minWidth: 400 }}
-                    />
-                  ) : (
-                    <TextField
-                      required
-                      sx={{ minWidth: 400 }}
-                      label="Name"
-                      autoFocus
-                      value={name}
-                      onChange={handleNameChange}
-                    />
-                  )}
+	return (
+		<Container maxWidth="md" sx={{ marginTop: 16 }}>
+			{(isFetching || results.isLoading) && <LoadingBar />}
 
-                  <Box>
-                    {isFetching ? (
-                      <Skeleton
-                        variant="rectangular"
-                        width={150}
-                        height={40}
-                        sx={{ width: 150, mt: 3 }}
-                      />
-                    ) : (
-                      <>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          sx={{
-                            fontSize: 16,
-                            width: 150,
-                            mt: 3,
-                          }}
-                          style={{
-                            backgroundColor:
-                              results.isLoading || !edit ? 'grey' : '',
-                          }}
-                        >
-                          {results.isLoading ? (
-                            <Box>
-                              SAVING
-                              <CircularProgress
-                                sx={{ color: 'white', ml: 2 }}
-                                size={16}
-                              />
-                            </Box>
-                          ) : results.isSuccess ? (
-                            'SAVED'
-                          ) : (
-                            'SAVE'
-                          )}
-                        </Button>
-                        {edit && (
-                          <Button
-                            onClick={handleCancel}
-                            variant="outlined"
-                            sx={{
-                              fontSize: 16,
-                              marginLeft: 2,
-                              width: 150,
-                              mt: 3,
-                            }}
-                          >
-                            CANCEL
-                          </Button>
-                        )}
-                      </>
-                    )}
-                  </Box>
-                </Box>
-              </Box>
-            </Container>
-          </ThemeProvider>
-        </Paper>
-      </Container>
-    );
-  }
+			<Paper sx={{ height: '100%', overflow: 'hidden' }}>
+				<BreadcrumbsBar
+					paths={[
+						{ pathName: 'Home', path: '/' },
+						{ pathName: 'Categories', path: '/categories' },
+					]}
+					currentPage={category.name}
+				/>
 
-  return content;
+				<Container component="main" maxWidth="sm">
+					<Grid
+						container
+						spacing={4}
+						component="form"
+						onSubmit={handleSubmit}
+						sx={{ p: 4 }}
+					>
+						<Grid item sm={12}>
+							<TextField
+								required
+								fullWidth
+								label="Name"
+								value={name}
+								onChange={handleNameChange}
+							/>
+						</Grid>
+						<Grid item sm={6}>
+							<Button
+								fullWidth
+								variant="contained"
+								disabled={!edit}
+								type="submit"
+							>
+								save
+							</Button>
+						</Grid>
+						<Grid item xs={6}>
+							{edit && (
+								<Button fullWidth variant="outlined" onClick={handleCancel}>
+									CANCEL
+								</Button>
+							)}
+						</Grid>
+					</Grid>
+				</Container>
+			</Paper>
+		</Container>
+	);
 }
-
-export default CategoryInfoPage;

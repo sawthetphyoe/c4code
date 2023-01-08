@@ -3,100 +3,68 @@ import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import { Container, Grid, Paper } from '@mui/material';
-import AdminDisplayCard from '../components/AdminDisplayCard';
+import IconCard from '../components/IconCard';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
 
-function HomePage() {
-  return (
-    <Container maxWidth="md">
-      <Paper
-        elevation={3}
-        sx={{
-          marginTop: 12,
-        }}
-      >
-        <BreadcrumbsBar currentPage="Home" />
-        <Grid
-          container
-          rowSpacing={8}
-          maxWidth="md"
-          sx={{
-            alignItems: 'center',
-            paddingTop: 8,
-            paddingBottom: 8,
-          }}
-        >
-          <Grid item xs={6}>
-            <AdminDisplayCard
-              icon={<SchoolRoundedIcon sx={{ fontSize: 56 }} />}
-              mainLink={{
-                name: 'COURSES',
-                path: 'courses',
-              }}
-              links={[
-                {
-                  name: 'Create Course',
-                  path: 'courses/new',
-                },
-              ]}
-            />
-          </Grid>
+const iconStyle = {
+	fontSize: 56,
+	color: 'primary',
+};
 
-          <Grid item xs={6}>
-            <AdminDisplayCard
-              icon={<PeopleAltRoundedIcon sx={{ fontSize: 56 }} />}
-              mainLink={{
-                name: 'USERS',
-                path: 'users',
-              }}
-              links={[
-                {
-                  name: 'Add User',
-                  path: 'users/add-user',
-                },
-              ]}
-            />
-          </Grid>
+export default function HomePage() {
+	return (
+		<Container maxWidth="md">
+			<Paper
+				elevation={3}
+				sx={{
+					mt: 8,
+				}}
+			>
+				<BreadcrumbsBar currentPage="Home" />
+				<Container maxWidth="sm">
+					<Grid
+						container
+						spacing={4}
+						maxWidth="md"
+						sx={{
+							alignItems: 'center',
+							p: 6,
+						}}
+					>
+						<Grid item xs={6}>
+							<IconCard
+								icon={<SchoolRoundedIcon sx={iconStyle} />}
+								buttonText="courses"
+								link="/courses"
+							/>
+						</Grid>
 
-          <Grid item xs={6}>
-            <AdminDisplayCard
-              icon={<CategoryRoundedIcon sx={{ fontSize: 56 }} />}
-              mainLink={{
-                name: 'CATEGORIES',
-                path: 'categories',
-              }}
-              links={[
-                {
-                  name: 'Add new category',
-                  path: 'categories/new',
-                },
-              ]}
-            />
-          </Grid>
+						<Grid item xs={6}>
+							<IconCard
+								icon={<PeopleAltRoundedIcon sx={iconStyle} />}
+								buttonText="users"
+								link="/users"
+							/>
+						</Grid>
 
-          <Grid item xs={6}>
-            <AdminDisplayCard
-              icon={<AssessmentRoundedIcon sx={{ fontSize: 56 }} />}
-              mainLink={{
-                name: 'REPORTS',
-                path: 'reports',
-              }}
-              links={[
-                {
-                  name: 'User reports',
-                  path: 'reports/users',
-                },
-                {
-                  name: 'Course reports',
-                  path: 'reports/courses',
-                },
-              ]}
-            />
-          </Grid>
-        </Grid>
-      </Paper>
-    </Container>
-  );
+						<Grid item xs={6}>
+							<IconCard
+								icon={<CategoryRoundedIcon sx={iconStyle} />}
+								buttonText="categories"
+								link="/categories"
+							/>
+						</Grid>
+
+						<Grid item xs={6}>
+							<IconCard
+								icon={<AssessmentRoundedIcon sx={iconStyle} />}
+								buttonText="reports"
+								link="/reports"
+							/>
+						</Grid>
+					</Grid>
+				</Container>
+			</Paper>
+		</Container>
+	);
 }
-
-export default HomePage;

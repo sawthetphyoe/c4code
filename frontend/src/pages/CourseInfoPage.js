@@ -45,37 +45,38 @@ function CourseInfoPage() {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState([]);
+  const [edit, setEdit] = useState(false);
 
   useEffect(() => {
     if (categData && !categError) {
       setCategories([...categData.data.data]);
-    }
-    if (courseData && !courseError) {
-      setName(courseData.data.data.name);
-      setDescription(courseData.data.data.description);
-      setCategory(courseData.data.data.category._id);
+      if (courseData && !courseError) {
+        setName(courseData.data.data.name);
+        setDescription(courseData.data.data.description);
+        setCategory(courseData.data.data.category._id);
+      }
     }
   }, [categData, categError, courseData, courseError]);
 
-  useEffect(() => {
-    if (results.isSuccess) navigate('/courses');
-  });
-
   const handleNameChange = (e) => {
     setName(e.target.value);
+    setEdit(true);
   };
 
   const handleCateChange = (e) => {
     setCategory(e.target.value);
+    setEdit(true);
   };
 
   const handleDescChange = (e) => {
     setDescription(e.target.value);
+    setEdit(true);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    updateCourse({ id, name, description, category });
+    setEdit(false);
+    updateCourse({ id, body: { name, description, category } });
   };
 
   return (
@@ -161,6 +162,7 @@ function CourseInfoPage() {
                     type="submit"
                     fullWidth
                     variant="contained"
+                    disabled={edit}
                     style={{
                       backgroundColor: results.isLoading && 'grey',
                     }}

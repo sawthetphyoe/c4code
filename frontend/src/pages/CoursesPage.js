@@ -1,6 +1,6 @@
 import { Button, Container, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
-import CourseList from '../components/CourseList';
+import CourseList from '../courses/CourseList';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import SearchIcon from '@mui/icons-material/Search';
