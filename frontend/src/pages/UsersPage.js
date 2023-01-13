@@ -18,7 +18,7 @@ function UsersPage() {
 	}, []);
 
 	return (
-		<Container maxWidth="xl" sx={{ marginTop: 8 }}>
+		<Container maxWidth="xl">
 			<Paper sx={{ height: '100%', overflow: 'hidden' }}>
 				<BreadcrumbsBar
 					paths={[
@@ -33,7 +33,7 @@ function UsersPage() {
 				</BreadcrumbsBar>
 
 				<Container
-					maxWidth="xl"
+					maxWidth="lg"
 					sx={{
 						display: 'flex',
 						flexDirection: 'column',

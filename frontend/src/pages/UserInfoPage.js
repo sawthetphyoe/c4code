@@ -25,7 +25,7 @@ export default function UserInfoPage() {
 		user.lastName;
 
 	return (
-		<Container maxWidth="xl" sx={{ marginTop: 8 }}>
+		<Container maxWidth="xl">
 			<Paper sx={{ height: '100%', overflow: 'hidden' }}>
 				<BreadcrumbsBar
 					paths={[

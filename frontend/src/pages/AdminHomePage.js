@@ -7,28 +7,23 @@ import IconCard from '../components/IconCard';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
 
 const iconStyle = {
-	fontSize: 56,
-	color: 'primary',
+	fontSize: 45,
+	color: '#e0f0ea',
 };
 
 export default function HomePage() {
 	return (
 		<Container maxWidth="md">
-			<Paper
-				elevation={3}
-				sx={{
-					mt: 8,
-				}}
-			>
+			<Paper elevation={3}>
 				<BreadcrumbsBar currentPage="Home" />
 				<Container maxWidth="sm">
 					<Grid
 						container
-						spacing={4}
+						spacing={6}
 						maxWidth="md"
 						sx={{
 							alignItems: 'center',
-							p: 6,
+							p: 8,
 						}}
 					>
 						<Grid item xs={6}>

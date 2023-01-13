@@ -6,6 +6,7 @@ import {
 	Table,
 	TableHead,
 	TableBody,
+	Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import TableRow from '../components/TableRow';
@@ -14,11 +15,11 @@ import Error from '../ultis/Error';
 import LoadingBar from '../ultis/LoadingBar';
 
 const tableHeads = [
-	'User',
-	'Email',
-	'User type',
-	'Registered Date',
-	'Last Login',
+	'USER',
+	'EMAIL',
+	'USER TYPE',
+	'REGISTERED DATE',
+	'LAST LOGIN',
 	'',
 	'',
 ];
@@ -46,6 +47,15 @@ export default function UserList({ searchTerm }) {
 			</Container>
 		);
 
+	if (data.results === 0)
+		return (
+			<Container maxWidth="xl">
+				<Typography variant="h4" sx={{ textAlign: 'center', p: 4 }}>
+					No users yet! Start by adding some users.
+				</Typography>
+			</Container>
+		);
+
 	const users = data.data.data.map((user) => {
 		return {
 			id: user._id,
@@ -61,9 +71,9 @@ export default function UserList({ searchTerm }) {
 		};
 	});
 
-	const renderedtableHeads = <TableRow data={tableHeads} />;
+	const renderedTableHeads = <TableRow data={tableHeads} />;
 
-	const renderedtableRows = users
+	const renderedTableRows = users
 		.filter((user) =>
 			user.info[0].toLowerCase().includes(searchTerm.toLowerCase())
 		)
@@ -80,12 +90,24 @@ export default function UserList({ searchTerm }) {
 	return (
 		<>
 			{results.isError && <Error message={results.error.data.message} />}
-			<TableContainer sx={{ maxHeight: 800 }}>
-				<Table stickyHeader>
-					<TableHead>{renderedtableHeads}</TableHead>
-					<TableBody>{renderedtableRows}</TableBody>
-				</Table>
-			</TableContainer>
+			{renderedTableRows.length === 0 ? (
+				<Container maxWidth="xl">
+					<Typography
+						variant="h4"
+						component="div"
+						sx={{ textAlign: 'center', p: 8 }}
+					>
+						No Users
+					</Typography>
+				</Container>
+			) : (
+				<TableContainer sx={{ maxHeight: 800 }}>
+					<Table stickyHeader>
+						<TableHead>{renderedTableHeads}</TableHead>
+						<TableBody>{renderedTableRows}</TableBody>
+					</Table>
+				</TableContainer>
+			)}
 		</>
 	);
 }

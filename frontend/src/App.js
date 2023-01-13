@@ -14,22 +14,76 @@ import UserRoutes from './routes/UserRoutes';
 import CategoryRoutes from './routes/CategoryRoutes';
 import CoursesRoutes from './routes/CoursesRoutes';
 
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+	palette: {
+		primary: {
+			main: '#574F7D',
+			dark: '#503A65',
+			contrastText: '#fff',
+		},
+		secondary: {
+			light: '#ff7961',
+			main: '#95ADBE',
+			dark: '#ba000d',
+			contrastText: '#000',
+		},
+	},
+	components: {
+		MuiContainer: {
+			defaultProps: {
+				disableGutters: true,
+			},
+			styleOverrides: {
+				maxWidthXl: {
+					'&.MuiContainer-maxWidthXl': {
+						maxWidth: 1530,
+					},
+				},
+				maxWidthLg: {
+					'&.MuiContainer-maxWidthLg': {
+						maxWidth: 1271,
+					},
+				},
+				maxWidthMd: {
+					'&.MuiContainer-maxWidthMd': {
+						maxWidth: 1008,
+					},
+				},
+				maxWidthSm: {
+					'&.MuiContainer-maxWidthSm': {
+						maxWidth: 750,
+					},
+				},
+				maxWidthXs: {
+					'&.MuiContainer-maxWidthXs': {
+						maxWidth: 360,
+					},
+				},
+			},
+		},
+	},
+});
+
 function App() {
-  return (
-    <BrowserRouter>
-      <ResponsiveAppBar />
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route element={<ProtectedRoutes />}>
-          <Route path="/" element={<AdminHomePage />} />
-          <Route path="users/*" element={<UserRoutes />} />
-          <Route path="categories/*" element={<CategoryRoutes />} />
-          <Route path="courses/*" element={<CoursesRoutes />} />
-        </Route>
-      </Routes>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
-    </BrowserRouter>
-  );
+	return (
+		<BrowserRouter>
+			<ThemeProvider theme={theme}>
+				<ResponsiveAppBar />
+				<Routes>
+					<Route path="/login" element={<LoginPage />} />
+					<Route element={<ProtectedRoutes />}>
+						<Route path="/" element={<AdminHomePage />} />
+						<Route path="users/*" element={<UserRoutes />} />
+						<Route path="categories/*" element={<CategoryRoutes />} />
+						<Route path="courses/*" element={<CoursesRoutes />} />
+					</Route>
+				</Routes>
+				<Copyright sx={{ mt: 8, mb: 4 }} />
+			</ThemeProvider>
+		</BrowserRouter>
+	);
 }
 
 export default App;

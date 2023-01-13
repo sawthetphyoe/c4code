@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, Paper } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 export default function IconCard({ icon, buttonText, link }) {
 	const navigate = useNavigate();
 	return (
-		<Paper
+		<Box
 			sx={{
 				display: 'flex',
 				flexDirection: 'column',
@@ -14,10 +14,14 @@ export default function IconCard({ icon, buttonText, link }) {
 				p: 3,
 			}}
 		>
-			{icon}
+			<Box
+				sx={{ bgcolor: '#95ADBE', pt: 2, pb: 2, pl: 3, pr: 3, borderRadius: 2 }}
+			>
+				{icon}
+			</Box>
 			<Button variant="text" onClick={() => navigate(link)}>
 				{buttonText}
 			</Button>
-		</Paper>
+		</Box>
 	);
 }

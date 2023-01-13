@@ -17,7 +17,7 @@ function CategoriesPage() {
 	}, []);
 
 	return (
-		<Container maxWidth="lg" sx={{ marginTop: 8 }}>
+		<Container maxWidth="lg">
 			<Paper sx={{ height: '100%', overflow: 'hidden' }}>
 				<BreadcrumbsBar
 					paths={[
@@ -31,7 +31,7 @@ function CategoriesPage() {
 					<SearchInput term={searchTerm} onChange={handleSearchTermChange} />
 				</BreadcrumbsBar>
 				<Container
-					maxWidth="lg"
+					maxWidth="md"
 					sx={{
 						display: 'flex',
 						flexDirection: 'column',

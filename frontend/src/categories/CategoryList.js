@@ -1,12 +1,19 @@
 import { useGetAllCategoriesQuery, useDeleteCategoryMutation } from '../store';
-import { TableContainer, Table, TableHead, TableBody } from '@mui/material';
+import {
+	TableContainer,
+	Table,
+	TableHead,
+	TableBody,
+	Container,
+	Typography,
+} from '@mui/material';
 import TableRow from '../components/TableRow';
 import { useNavigate } from 'react-router-dom';
 import SkeletonList from '../ultis/SkeletonList';
 import Error from '../ultis/Error';
 import LoadingBar from '../ultis/LoadingBar';
 
-const tableHeads = ['Name', 'CreatedAt', 'Number of Courses', '', ''];
+const tableHeads = ['NAME', 'CREATED AT', 'NUMBER OF COURSES', '', ''];
 
 export default function UserList({ searchTerm }) {
 	const navigate = useNavigate();
@@ -25,12 +32,21 @@ export default function UserList({ searchTerm }) {
 
 	if (isFetching || results.isLoading) {
 		return (
-			<>
+			<Container maxWidth="lg">
 				<LoadingBar />
 				<SkeletonList times={6} spacing={2} />
-			</>
+			</Container>
 		);
 	}
+
+	if (data.results === 0)
+		return (
+			<Container maxWidth="xl">
+				<Typography variant="h4" sx={{ textAlign: 'center', p: 4 }}>
+					No categories yet! Start by adding some categories.
+				</Typography>
+			</Container>
+		);
 
 	const categories = data.data.data.map((cate) => {
 		return {

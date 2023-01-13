@@ -1,148 +1,103 @@
-import { useState } from 'react';
 import { useGetAllCoursesQuery, useDeleteCourseMutation } from '../store';
 import {
-	Box,
 	Container,
 	TableContainer,
 	Table,
 	TableHead,
 	TableBody,
-	TableRow,
-	TableCell,
-	IconButton,
-	Alert,
-	CircularProgress,
+	Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
+import TableRow from '../components/TableRow';
 import SkeletonList from '../ultis/SkeletonList';
+import LoadingBar from '../ultis/LoadingBar';
+import Error from '../ultis/Error';
 
-const tableHeads = ['NAME', 'CATEGORY', 'STUDENTS', 'LAST UPDATED', '', ''];
+const tableHeads = [
+	'NAME',
+	'COURSE CODE',
+	'CATEGORY',
+	'CREATED AT',
+	'UPDATED AT',
+	'STATUS',
+	'',
+	'',
+];
 
-function CourseList({ searchTerm }) {
+export default function CourseList({ searchTerm }) {
+	const navigate = useNavigate();
 	const { data, error, isFetching } = useGetAllCoursesQuery();
-	const [deleteCourse, courseDeleteResults] = useDeleteCourseMutation();
-	const [deletedId, setDeletedId] = useState('');
+	const [deleteCourse, results] = useDeleteCourseMutation();
 
-	const handleUserDeleteSubmit = (e, id) => {
-		e.preventDefault();
+	const handleCourseEdit = (id) => {
+		navigate(`${id}`);
+	};
+
+	const handleCourseDelete = (id) => {
 		deleteCourse(id);
-		setDeletedId(id);
 	};
 
-	const deleteButton = (id, deleting) => {
+	if (error) return <Error message={error.data.message} />;
+
+	if (isFetching || results.isLoading)
 		return (
-			<form onSubmit={(e) => handleUserDeleteSubmit(e, id)}>
-				<IconButton aria-label="delete" type="submit">
-					{deleting && deletedId === id ? (
-						<CircularProgress size={18} />
-					) : (
-						<DeleteIcon />
-					)}
-				</IconButton>
-			</form>
+			<Container maxWidth="xl">
+				<LoadingBar />
+				<SkeletonList times={6} spacing={2} />
+			</Container>
 		);
-	};
 
-	let content;
-	if (isFetching) {
-		content = <SkeletonList times={6} spacing={2} />;
-	} else if (error) {
-		content = <h1>Error</h1>;
-	} else {
-		const rows = data.data.data.map((course) => {
-			return [
-				{
-					name: course.name,
-					pathName: `${course._id}`,
-				},
-				course.category.name,
-				0,
+	if (data.results === 0)
+		return (
+			<Container maxWidth="xl">
+				<Typography variant="h4" sx={{ textAlign: 'center', p: 4 }}>
+					No courses yet! Start by adding some courses.
+				</Typography>
+			</Container>
+		);
+
+	const courses = data.data.data.map((course) => {
+		return {
+			id: course._id,
+			info: [
+				course.name,
+				course.code,
+				course.category ? course.category.name : '-',
+				new Date(course.createdAt).toLocaleDateString('en-UK'),
 				course.updatedAt
 					? new Date(course.updatedAt).toLocaleDateString('en-UK')
-					: 'never',
-			];
-		});
+					: 'Never',
+				course.active ? 'Active' : 'Inactive',
+			],
+		};
+	});
 
-		const renderedtableHeads = tableHeads.map((title, index) =>
-			index === 0 || index === 1 ? (
-				<TableCell sx={{ fontSize: 16 }} key={index + title}>
-					{title}
-				</TableCell>
-			) : (
-				<TableCell align="right" sx={{ fontSize: 16 }} key={index + title}>
-					{title}
-				</TableCell>
-			)
-		);
+	const renderedTableHeads = <TableRow data={tableHeads} />;
 
-		const renderedtableRows = rows
-			.filter((row) =>
-				row[0].name.toLowerCase().includes(searchTerm.toLowerCase())
-			)
-			.map((row, index) => (
-				<TableRow
-					key={index}
-					sx={{
-						'&:last-child td, &:last-child th': { border: 0 },
-					}}
-					hover={true}
-				>
-					{row.map((item, index) =>
-						index === 0 || index === 1 ? (
-							<TableCell
-								component="th"
-								scope="row"
-								key={index}
-								sx={{ fontSize: 16 }}
-							>
-								{index === 0 ? (
-									<Link
-										to={item.pathName}
-										style={{
-											color: 'inherit',
-											textDecoration: 'none',
-											textTransform: 'capitalize',
-										}}
-										className="hover-underlined"
-									>
-										{item.name}
-									</Link>
-								) : (
-									item
-								)}
-							</TableCell>
-						) : (
-							<TableCell align="right" key={index} sx={{ fontSize: 16 }}>
-								{item}
-							</TableCell>
-						)
-					)}
+	const renderedTableRows = courses
+		.filter((course) =>
+			course.info[0].toLowerCase().includes(searchTerm.toLowerCase())
+		)
+		.map((course) => (
+			<TableRow
+				key={course.id}
+				id={course.id}
+				data={course.info}
+				onEdit={handleCourseEdit}
+				onDelete={handleCourseDelete}
+			/>
+		));
 
-					<TableCell align="right" key={index} sx={{ fontSize: 16 }}>
-						{deleteButton(row[0].pathName, courseDeleteResults.isLoading)}
-					</TableCell>
-				</TableRow>
-			));
+	return (
+		<>
+			{results.isError && <Error message={results.error.data.message} />}
 
-		content = (
-			<TableContainer component={Box} sx={{ maxHeight: 800 }}>
-				{courseDeleteResults.isError && (
-					<Alert severity="error">
-						{courseDeleteResults.error.data.message}
-					</Alert>
-				)}
-				<Table stickyHeader sx={{ minWidth: 650 }}>
-					<TableHead>
-						<TableRow>{renderedtableHeads}</TableRow>
-					</TableHead>
-					<TableBody>{renderedtableRows}</TableBody>
+			<TableContainer sx={{ maxHeight: 800 }}>
+				<Table stickyHeader>
+					<TableHead>{renderedTableHeads}</TableHead>
+					<TableBody>{renderedTableRows}</TableBody>
 				</Table>
 			</TableContainer>
-		);
-	}
-
-	return <Container maxWidth="xl">{content}</Container>;
+		</>
+	);
 }
-
-export default CourseList;

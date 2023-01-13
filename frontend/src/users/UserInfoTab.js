@@ -136,7 +136,7 @@ export default function UserInfoTab() {
 	if (error) return <Error message={error.data.message} />;
 
 	return (
-		<Container maxWidth="md" sx={{ pb: 8 }}>
+		<Container maxWidth="md">
 			{/* Refetching */}
 			{(isFetching ||
 				updateUserResults.isLoading ||
@@ -162,7 +162,7 @@ export default function UserInfoTab() {
 				{resetPasswordResults.isSuccess && (
 					<Alert severity="success">
 						<Typography variant="h6" sx={{ fontSize: 18 }}>
-							Successfully reset to default password!
+							Successfully reset user's password to default password!
 						</Typography>
 					</Alert>
 				)}
@@ -172,7 +172,7 @@ export default function UserInfoTab() {
 				sx={{
 					display: 'flex',
 					alignItems: 'top',
-					justifyContent: 'space-between',
+					justifyContent: 'space-around',
 				}}
 			>
 				<Box
@@ -291,7 +291,7 @@ export default function UserInfoTab() {
 									variant="outlined"
 									color="warning"
 									onClick={handleResetPasswordClick}
-									sx={{ mt: 8 }}
+									sx={{ mt: 4 }}
 								>
 									reset password
 								</Button>

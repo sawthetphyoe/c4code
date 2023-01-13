@@ -48,7 +48,7 @@ export default function CategoryInfoPage() {
 	const category = data.data.data;
 
 	return (
-		<Container maxWidth="md" sx={{ marginTop: 16 }}>
+		<Container maxWidth="md">
 			{(isFetching || results.isLoading) && <LoadingBar />}
 
 			<Paper sx={{ height: '100%', overflow: 'hidden' }}>
@@ -60,13 +60,13 @@ export default function CategoryInfoPage() {
 					currentPage={category.name}
 				/>
 
-				<Container component="main" maxWidth="sm">
+				<Container maxWidth="sm">
 					<Grid
 						container
 						spacing={4}
 						component="form"
 						onSubmit={handleSubmit}
-						sx={{ p: 4 }}
+						sx={{ p: 8 }}
 					>
 						<Grid item sm={12}>
 							<TextField
