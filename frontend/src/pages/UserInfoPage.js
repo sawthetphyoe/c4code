@@ -6,6 +6,26 @@ import { useGetUserByIdQuery } from '../store';
 import { useParams } from 'react-router-dom';
 import Error from '../ultis/Error';
 import LoadingBar from '../ultis/LoadingBar';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import UserCourseTab from '../users/UserCourseTab';
+import UserFileTab from '../users/UserFileTab';
+
+const tabHeadings = [
+	{
+		title: 'Info',
+		icon: <InfoRoundedIcon />,
+	},
+	{
+		title: 'Courses',
+		icon: <SchoolRoundedIcon />,
+	},
+	{
+		title: 'Files',
+		icon: <FolderRoundedIcon />,
+	},
+];
 
 export default function UserInfoPage() {
 	const { id } = useParams();
@@ -40,7 +60,10 @@ export default function UserInfoPage() {
 					]}
 					currentPage={isFetching ? '-' : formattedName}
 				/>
-				<Tab tabs={[<UserInfoTab />, <div>Tab 2</div>, <div>Tab3</div>]} />
+				<Tab
+					heads={tabHeadings}
+					tabs={[<UserInfoTab />, <UserCourseTab />, <UserFileTab />]}
+				/>
 			</Paper>
 		</Container>
 	);

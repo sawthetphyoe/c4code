@@ -1,4 +1,4 @@
-import { IconButton, TableRow as Row } from '@mui/material';
+import { IconButton, TableRow as MuiTableRow } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -17,7 +17,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	},
 }));
 
-const StyledTableRow = styled(Row)(({ theme }) => ({
+const StyledTableRow = styled(MuiTableRow)(({ theme }) => ({
 	'&:nth-of-type(even)': {
 		backgroundColor: theme.palette.action.hover,
 	},
@@ -32,7 +32,7 @@ export default function TableRow({ id, data, onEdit, onDelete, styles }) {
 		<StyledTableCell key={index}>{item}</StyledTableCell>
 	));
 	return (
-		<StyledTableRow hover>
+		<StyledTableRow>
 			{itemCells}
 
 			{onEdit && (

@@ -10,13 +10,13 @@ import { useNavigate } from 'react-router-dom';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useCheckLoginQuery, useUserLogoutMutation } from '../store';
 
-const NavBar = styled(AppBar)(({ theme }) => ({
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
 	'&': {
 		backgroundColor: theme.palette.primary.dark,
 	},
 }));
 
-export default function ResponsiveAppBar() {
+export default function NavBar() {
 	const [userLogout] = useUserLogoutMutation();
 	const { data, error } = useCheckLoginQuery();
 	const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function ResponsiveAppBar() {
 	};
 
 	return (
-		<NavBar position="sticky" sx={{ mb: 8, pt: 2, pb: 2 }}>
+		<StyledAppBar position="sticky" sx={{ mb: 8, pt: 2, pb: 2 }}>
 			<Container
 				maxWidth="xl"
 				sx={{ display: 'flex', justifyContent: 'space-between' }}
@@ -93,6 +93,6 @@ export default function ResponsiveAppBar() {
 					)}
 				</Box>
 			</Container>
-		</NavBar>
+		</StyledAppBar>
 	);
 }

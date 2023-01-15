@@ -9,29 +9,29 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 
 function Error({ message, variant }) {
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
+	const navigate = useNavigate();
+	const [open, setOpen] = useState(true);
 
-  const handleClose = () => {
-    variant === 'link' && navigate(-1, { replace: true });
-    setOpen(false);
-  };
+	const handleClose = () => {
+		variant === 'link' && navigate(-1, { replace: true });
+		setOpen(false);
+	};
 
-  return (
-    <Dialog open={open} onClose={handleClose}>
-      <Box sx={{ pl: 2, pr: 2, pt: 1, pb: 1 }}>
-        <DialogTitle color="error">Error !</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{message}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>
-            {variant === 'link' ? 'Go Back' : 'Close'}
-          </Button>
-        </DialogActions>
-      </Box>
-    </Dialog>
-  );
+	return (
+		<Dialog open={open} onClose={handleClose}>
+			<Box sx={{ pl: 2, pr: 2, pt: 1, pb: 1 }}>
+				<DialogTitle color="error">Error !</DialogTitle>
+				<DialogContent>
+					<DialogContentText>{message}</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleClose}>
+						{variant === 'link' ? 'Go Back' : 'Close'}
+					</Button>
+				</DialogActions>
+			</Box>
+		</Dialog>
+	);
 }
 
 export default Error;

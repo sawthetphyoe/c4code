@@ -19,7 +19,7 @@ export default function IconCard({ icon, buttonText, link }) {
 			>
 				{icon}
 			</Box>
-			<Button variant="text" onClick={() => navigate(link)}>
+			<Button variant="text" size="large" onClick={() => navigate(link)}>
 				{buttonText}
 			</Button>
 		</Box>

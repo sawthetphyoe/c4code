@@ -2,9 +2,6 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import { Tab as MuiTab } from '@mui/material';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
-import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 import Box from '@mui/material/Box';
 
 function TabPanel(props) {
@@ -36,42 +33,39 @@ function a11yProps(index) {
 	};
 }
 
-export default function Tab({ tabs }) {
+export default function Tab({ heads, tabs }) {
 	const [value, setValue] = useState(0);
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
 
+	const renderedHeads = heads.map((head, index) => {
+		return (
+			<MuiTab
+				key={head.title}
+				icon={head.icon}
+				iconPosition="start"
+				label={head.title}
+				{...a11yProps(index)}
+			/>
+		);
+	});
+
+	const renderedContents = tabs.map((tab, i) => (
+		<TabPanel key={i} index={i} value={value}>
+			{tab}
+		</TabPanel>
+	));
+
 	return (
 		<Box sx={{ width: '100%' }}>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-				<Tabs value={value} onChange={handleChange}>
-					<MuiTab
-						icon={<InfoRoundedIcon />}
-						iconPosition="start"
-						label="Info"
-						{...a11yProps(0)}
-					/>
-					<MuiTab
-						icon={<SchoolRoundedIcon />}
-						iconPosition="start"
-						label="Courses"
-						{...a11yProps(1)}
-					/>
-					<MuiTab
-						icon={<FolderRoundedIcon />}
-						iconPosition="start"
-						label="Files"
-						{...a11yProps(2)}
-					/>
+				<Tabs value={value} onChange={handleChange} sx={{ mb: 2 }}>
+					{renderedHeads}
 				</Tabs>
+				{renderedContents}
 			</Box>
-			{tabs.map((tab, i) => (
-				<TabPanel key={i} index={i} value={value}>
-					{tab}
-				</TabPanel>
-			))}
 		</Box>
 	);
 }

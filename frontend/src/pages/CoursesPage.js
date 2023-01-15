@@ -5,7 +5,7 @@ import { useState, useCallback } from 'react';
 import SearchInput from '../components/SearchInput';
 import AddCourseOverlay from '../courses/AddCourseOverlay';
 
-export default function CategoriesPage() {
+export default function CoursesPage() {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [modalOpen, setModalOpen] = useState(false);
 

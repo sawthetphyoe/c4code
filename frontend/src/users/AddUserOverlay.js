@@ -111,7 +111,7 @@ export default function AddUserOverlay({ open, onClose }) {
 					onSubmit={handleCreateUserSubmit}
 					sx={{ pt: 4, pb: 4, pl: 16, pr: 16 }}
 				>
-					<Grid item sm={12}>
+					<Grid item sm={6}>
 						<TextField
 							required
 							fullWidth
@@ -120,7 +120,7 @@ export default function AddUserOverlay({ open, onClose }) {
 							onChange={handleFirstNameChange}
 						/>
 					</Grid>
-					<Grid item sm={12}>
+					<Grid item sm={6}>
 						<TextField
 							required
 							fullWidth

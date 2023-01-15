@@ -3,18 +3,11 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import ResponsiveAppBar from './components/ResponsiveAppBar';
-
-import AdminHomePage from './pages/AdminHomePage';
-import LoginPage from './pages/LoginPage';
-
-import ProtectedRoutes from './routes/ProtectedRoutes';
-import Copyright from './components/Copyright';
-import UserRoutes from './routes/UserRoutes';
-import CategoryRoutes from './routes/CategoryRoutes';
-import CoursesRoutes from './routes/CoursesRoutes';
-
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Copyright from './components/Copyright';
+import LoginPage from './pages/LoginPage';
+import AuthRoute from './routes/AuthRoute';
+import NavBar from './components/NavBar';
 
 const theme = createTheme({
 	palette: {
@@ -70,17 +63,12 @@ function App() {
 	return (
 		<BrowserRouter>
 			<ThemeProvider theme={theme}>
-				<ResponsiveAppBar />
+				<NavBar />
 				<Routes>
+					<Route path="/*" element={<AuthRoute />} />
 					<Route path="/login" element={<LoginPage />} />
-					<Route element={<ProtectedRoutes />}>
-						<Route path="/" element={<AdminHomePage />} />
-						<Route path="users/*" element={<UserRoutes />} />
-						<Route path="categories/*" element={<CategoryRoutes />} />
-						<Route path="courses/*" element={<CoursesRoutes />} />
-					</Route>
 				</Routes>
-				<Copyright sx={{ mt: 8, mb: 4 }} />
+				<Copyright />
 			</ThemeProvider>
 		</BrowserRouter>
 	);

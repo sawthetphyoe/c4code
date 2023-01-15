@@ -1,191 +1,74 @@
-import {
-	Container,
-	Paper,
-	Button,
-	CssBaseline,
-	TextField,
-	CircularProgress,
-	Box,
-	MenuItem,
-	Grid,
-	Skeleton,
-} from '@mui/material';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import { Container, Paper } from '@mui/material';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import {
-	useGetAllCategoriesQuery,
-	useGetCourseQuery,
-	useUpdateCourseMutation,
-} from '../store';
+
+import Tab from '../components/Tab';
+import { useGetCourseQuery } from '../store';
+import { useParams } from 'react-router-dom';
+import Error from '../ultis/Error';
+import LoadingBar from '../ultis/LoadingBar';
+import CourseInfoTab from '../courses/CourseInfoTab';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import LocalLibraryRoundedIcon from '@mui/icons-material/LocalLibraryRounded';
+import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import CourseContentTab from '../courses/CourseContentTab';
+import CourseUserTab from '../courses/CourseUserTab';
+import CourseFileTab from '../courses/CourseFileTab';
+
+const tabHeadings = [
+	{
+		title: 'Info',
+		icon: <InfoRoundedIcon />,
+	},
+	{
+		title: 'Content',
+		icon: <LocalLibraryRoundedIcon />,
+	},
+	{
+		title: 'Users',
+		icon: <PeopleAltRoundedIcon />,
+	},
+	{
+		title: 'Files',
+		icon: <FolderRoundedIcon />,
+	},
+];
 
 export default function CourseInfoPage() {
 	const { id } = useParams();
-	const navigate = useNavigate();
+	const { data, error, isLoading, isFetching } = useGetCourseQuery(id);
 
-	const {
-		data: courseData,
-		error: courseError,
-		isLoading: courseLoading,
-	} = useGetCourseQuery(id);
+	if (error) return <Error message={error.data.message} />;
 
-	const {
-		data: categData,
-		error: categError,
-		isLoading: categLoading,
-	} = useGetAllCategoriesQuery();
+	if (isLoading) return <LoadingBar />;
 
-	const [updateCourse, results] = useUpdateCourseMutation();
-
-	const [name, setName] = useState('');
-	const [description, setDescription] = useState('');
-	const [category, setCategory] = useState('');
-	const [categories, setCategories] = useState([]);
-	const [edit, setEdit] = useState(false);
-
-	useEffect(() => {
-		if (categData && !categError) {
-			setCategories([...categData.data.data]);
-			if (courseData && !courseError) {
-				setName(courseData.data.data.name);
-				setDescription(courseData.data.data.description);
-				setCategory(courseData.data.data.category._id);
-			}
-		}
-	}, [categData, categError, courseData, courseError]);
-
-	const handleNameChange = (e) => {
-		setName(e.target.value);
-		setEdit(true);
-	};
-
-	const handleCateChange = (e) => {
-		setCategory(e.target.value);
-		setEdit(true);
-	};
-
-	const handleDescChange = (e) => {
-		setDescription(e.target.value);
-		setEdit(true);
-	};
-
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		setEdit(false);
-		updateCourse({ id, body: { name, description, category } });
-	};
+	const course = data.data.data;
 
 	return (
-		<Container maxWidth="lg">
-			<Paper square>
+		<Container maxWidth="xl">
+			<Paper sx={{ height: '100%', overflow: 'hidden' }}>
 				<BreadcrumbsBar
 					paths={[
-						{ pathName: 'Home', path: '/' },
-						{ pathName: 'Courses', path: '/courses' },
+						{
+							pathName: 'Home',
+							path: '/',
+						},
+						{
+							pathName: 'Courses',
+							path: '/courses',
+						},
 					]}
-					currentPage={courseData ? courseData.data.data.name : '-'}
+					currentPage={isFetching ? '-' : course.name}
 				/>
-				<Container component="main" maxWidth="md" sx={{ paddingBottom: 2 }}>
-					<CssBaseline />
-					<Grid
-						container
-						noValidate
-						component="form"
-						onSubmit={handleSubmit}
-						autoComplete="off"
-						spacing={4}
-						sx={{ mt: 3, mb: 5 }}
-					>
-						<Grid item md={6}>
-							{categLoading || courseLoading ? (
-								<Skeleton height={60} width={450} variant="rectangular" />
-							) : (
-								<TextField
-									required
-									fullWidth
-									label="Course Name"
-									autoFocus
-									value={name}
-									onChange={handleNameChange}
-								/>
-							)}
-						</Grid>
-
-						<Grid item xs={6}></Grid>
-
-						<Grid item xs={6}>
-							{categLoading || courseLoading ? (
-								<Skeleton height={60} width={450} variant="rectangular" />
-							) : (
-								<TextField
-									fullWidth
-									id="outlined-select-currency"
-									select
-									label="Category *"
-									value={category}
-									onChange={handleCateChange}
-								>
-									{categories.map((cate) => (
-										<MenuItem key={cate.name} value={cate._id}>
-											{cate.name}
-										</MenuItem>
-									))}
-								</TextField>
-							)}
-						</Grid>
-
-						<Grid item xs={12}>
-							{categLoading || courseLoading ? (
-								<Skeleton height={60} width={450} variant="rectangular" />
-							) : (
-								<TextField
-									fullWidth
-									label="Description *"
-									value={description}
-									onChange={handleDescChange}
-									multiline
-									rows={6}
-								/>
-							)}
-						</Grid>
-
-						<Grid item xs={4} mt={2}>
-							{categLoading || courseLoading ? (
-								<Skeleton height={60} width={450} variant="rectangular" />
-							) : (
-								<Button
-									type="submit"
-									fullWidth
-									variant="contained"
-									disabled={edit}
-									style={{
-										backgroundColor: results.isLoading && 'grey',
-									}}
-								>
-									{results.isLoading ? (
-										<Box>
-											updating course
-											<CircularProgress
-												sx={{ color: 'white', ml: 2 }}
-												size={16}
-											/>
-										</Box>
-									) : (
-										'update course'
-									)}
-								</Button>
-							)}
-						</Grid>
-						<Grid item xs={4} mt={2}></Grid>
-						<Grid item xs={4} mt={2} sx={{ textAlign: 'right' }}>
-							<Button onClick={() => navigate(`/courses/contents/${id}`)}>
-								Go to course content
-								<ArrowForwardRoundedIcon sx={{ ml: 1 }} />
-							</Button>
-						</Grid>
-					</Grid>
-				</Container>
+				<Tab
+					heads={tabHeadings}
+					tabs={[
+						<CourseInfoTab />,
+						<CourseContentTab />,
+						<CourseUserTab />,
+						<CourseFileTab />,
+					]}
+				/>
 			</Paper>
 		</Container>
 	);

@@ -11,7 +11,7 @@ const iconStyle = {
 	color: '#e0f0ea',
 };
 
-export default function HomePage() {
+export default function AdminHomePage() {
 	return (
 		<Container maxWidth="md">
 			<Paper elevation={3}>
