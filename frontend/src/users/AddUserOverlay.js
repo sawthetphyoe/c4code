@@ -20,6 +20,10 @@ const roles = [
 		value: 'admin',
 		label: 'Admin',
 	},
+	{
+		value: 'super-admin',
+		label: 'Super Admin',
+	},
 ];
 
 export default function AddUserOverlay({ open, onClose }) {

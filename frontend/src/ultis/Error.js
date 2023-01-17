@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 
-function Error({ message, variant }) {
+export default function Error({ message, variant }) {
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(true);
 
@@ -33,5 +33,3 @@ function Error({ message, variant }) {
 		</Dialog>
 	);
 }
-
-export default Error;

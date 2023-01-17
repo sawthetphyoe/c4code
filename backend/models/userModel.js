@@ -24,8 +24,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a role for this user'],
     enum: {
-      values: ['admin', 'instructor', 'student'],
-      message: 'Role must be either: admin, instructor or student',
+      values: ['super-admin', 'admin', 'instructor', 'student'],
+      message: 'Role must be either: super-admin, admin, instructor or student',
     },
     default: 'student',
   },

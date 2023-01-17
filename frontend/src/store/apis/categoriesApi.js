@@ -47,8 +47,7 @@ const categoriesApi = createApi({
 				},
 			}),
 			updateCategory: builder.mutation({
-				invalidatesTags: (result, error, cate) =>
-					result ? [{ type: 'category', id: cate.id }] : [],
+				invalidatesTags: (result, error, cate) => [{ type: 'category' }],
 				query: (cate) => {
 					return {
 						url: `${cate.id}`,

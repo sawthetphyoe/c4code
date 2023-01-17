@@ -16,25 +16,21 @@ router.get('/check-login', userController.getMe);
 router.post('/updateMyPassword', authController.changePassword);
 router.patch('/me', userController.uploadUserImage, userController.updateMe);
 
-////////// Routes restricted to Admin or Instructor//////////
-router.use(authController.restrictTo('admin', 'instructor'));
-
+////////// Routes restricted to Super-Admin, Admin or Instructor//////////
+router.use(authController.restrictTo('super-admin', 'admin', 'instructor'));
+// Get All Users
 router.route('/').get(userController.getAllUsers);
+// Get A User
+router.route('/:id').get(userController.getUser);
 
-router
-  .route('/:id')
-  .get(userController.getUser)
-  .patch(userController.uploadUserImage, userController.updateUser);
-
-////////// Routes restricted to Admin //////////
-router.use(authController.restrictTo('admin'));
-
+////////// Routes restricted to Super-Admin or Admin //////////
+router.use(authController.restrictTo('super-admin', 'admin'));
 // Resigter User
 router.post('/register', authController.register);
-
+// Update A User
+router.patch('/:id', userController.uploadUserImage, userController.updateUser);
 // Reset User Password
 router.patch('/resetPassword/:id', authController.resetPassword);
-
 // Delete User
 router.delete('/:id', userController.deleteUser);
 

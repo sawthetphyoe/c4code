@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Category = require('./categoryModel');
 
 const courseSchema = new mongoose.Schema({
   name: {
@@ -10,10 +11,13 @@ const courseSchema = new mongoose.Schema({
   },
   code: String,
   image: String,
-  lectures: [
+  ratingsAverage: Number,
+  numOfRating: Number,
+  duration: { type: Number },
+  files: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Lecture',
+      ref: 'File',
     },
   ],
   instructors: [
@@ -44,6 +48,33 @@ const courseSchema = new mongoose.Schema({
 //   });
 //   next();
 // });
+
+courseSchema.statics.calcCategCourses = async function () {
+  const stats = await this.aggregate([
+    {
+      $group: {
+        _id: '$category',
+        numOfCourses: { $sum: 1 },
+      },
+    },
+  ]);
+
+  await Category.updateMany({}, { numberOfCourses: 0 });
+
+  for (categ of stats) {
+    await Category.findByIdAndUpdate(categ._id, {
+      numberOfCourses: categ.numOfCourses,
+    });
+  }
+};
+
+courseSchema.post('save', function () {
+  this.constructor.calcCategCourses(this.category);
+});
+
+courseSchema.post(/^findOneAnd/, async function (doc) {
+  await doc.constructor.calcCategCourses();
+});
 
 const Course = mongoose.model('Course', courseSchema);
 

@@ -42,7 +42,7 @@ export default function CourseInfoTab() {
 		description: '',
 		category: '',
 		image: '',
-		active: '',
+		active: false,
 	});
 	const [categories, setCategories] = useState([]);
 	const [edit, setEdit] = useState(false);
@@ -51,14 +51,14 @@ export default function CourseInfoTab() {
 		if (categData && !categError) {
 			setCategories([...categData.data.data]);
 			if (courseData && !courseError) {
-				const course = courseData.data.data;
+				const unchangedCourse = courseData.data.data;
 				setCourse({
-					name: course.name,
-					code: course.code,
-					description: course.description,
-					category: course.category._id,
-					image: course.image,
-					active: course.active,
+					name: unchangedCourse.name,
+					code: unchangedCourse.code,
+					description: unchangedCourse.description,
+					category: unchangedCourse.category._id,
+					image: unchangedCourse.image,
+					active: unchangedCourse.active,
 				});
 			}
 		}
@@ -113,20 +113,21 @@ export default function CourseInfoTab() {
 				name: course.name,
 				code: course.code,
 				description: course.description,
-				category: course.category._id,
+				category: course.category,
 				active: course.active,
 			},
 		});
 	};
 
 	const handleCancel = () => {
-		const course = courseData.data.data;
+		const unchangedCourse = courseData.data.data;
 		setCourse({
-			name: course.name,
-			code: course.code,
-			description: course.description,
-			category: course.category._id,
-			active: course.active,
+			name: unchangedCourse.name,
+			code: unchangedCourse.code,
+			description: unchangedCourse.description,
+			category: unchangedCourse.category._id,
+			active: unchangedCourse.active,
+			image: course.image,
 		});
 		setEdit(false);
 	};
@@ -159,9 +160,7 @@ export default function CourseInfoTab() {
 			>
 				<Avatar
 					variant="square"
-					src={
-						course.image && `http://localhost:3005/img/courses/${course.image}`
-					}
+					src={course.image && `http://localhost:3005/images/${course.image}`}
 					alt={course.name}
 					sx={{ height: 125, width: 200 }}
 				/>

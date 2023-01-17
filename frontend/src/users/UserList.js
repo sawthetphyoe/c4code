@@ -101,7 +101,7 @@ export default function UserList({ searchTerm }) {
 					</Typography>
 				</Container>
 			) : (
-				<TableContainer sx={{ maxHeight: 800 }}>
+				<TableContainer sx={{ maxHeight: 800, minHeight: 400 }}>
 					<Table stickyHeader>
 						<TableHead>{renderedTableHeads}</TableHead>
 						<TableBody>{renderedTableRows}</TableBody>

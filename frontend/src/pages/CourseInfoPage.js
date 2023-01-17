@@ -36,7 +36,7 @@ const tabHeadings = [
 
 export default function CourseInfoPage() {
 	const { id } = useParams();
-	const { data, error, isLoading, isFetching } = useGetCourseQuery(id);
+	const { data, error, isLoading } = useGetCourseQuery(id);
 
 	if (error) return <Error message={error.data.message} />;
 
@@ -58,7 +58,7 @@ export default function CourseInfoPage() {
 							path: '/courses',
 						},
 					]}
-					currentPage={isFetching ? '-' : course.name}
+					currentPage={isLoading ? '-' : course.name}
 				/>
 				<Tab
 					heads={tabHeadings}

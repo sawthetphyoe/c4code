@@ -35,6 +35,10 @@ const roles = [
 		value: 'admin',
 		label: 'Admin',
 	},
+	{
+		value: 'super-admin',
+		label: 'Super Admin',
+	},
 ];
 
 export default function UserInfoTab() {
@@ -184,7 +188,7 @@ export default function UserInfoTab() {
 					}}
 				>
 					<Avatar
-						src={user.image && `http://localhost:3005/img/users/${user.image}`}
+						src={user.image && `http://localhost:3005/images/${user.image}`}
 						alt={user.firstName}
 						sx={{ height: 150, width: 150 }}
 					/>

@@ -69,7 +69,7 @@ export default function NavBar() {
 								alt={data.data.data.firstName}
 								src={
 									data.data.data.image &&
-									`http://localhost:3005/img/users/${data.data.data.image}`
+									`http://localhost:3005/images/${data.data.data.image}`
 								}
 							/>
 

@@ -3,6 +3,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -22,12 +23,19 @@ const StyledTableRow = styled(MuiTableRow)(({ theme }) => ({
 		backgroundColor: theme.palette.action.hover,
 	},
 	// hide last border
-	'&:last-child td, &:last-child th': {
-		border: 0,
-	},
+	// '&:last-child td, &:last-child th': {
+	// 	border: 0,
+	// },
 }));
 
-export default function TableRow({ id, data, onEdit, onDelete, styles }) {
+export default function TableRow({
+	id,
+	name,
+	data,
+	onEdit,
+	onDownload,
+	onDelete,
+}) {
 	const itemCells = data.map((item, index) => (
 		<StyledTableCell key={index}>{item}</StyledTableCell>
 	));
@@ -39,6 +47,14 @@ export default function TableRow({ id, data, onEdit, onDelete, styles }) {
 				<StyledTableCell style={{ padding: 0 }}>
 					<IconButton onClick={() => onEdit(id)}>
 						<EditRoundedIcon />
+					</IconButton>
+				</StyledTableCell>
+			)}
+
+			{onDownload && (
+				<StyledTableCell style={{ padding: 0 }}>
+					<IconButton onClick={() => onDownload(name)}>
+						<DownloadRoundedIcon />
 					</IconButton>
 				</StyledTableCell>
 			)}

@@ -60,12 +60,12 @@ export default function Tab({ heads, tabs }) {
 
 	return (
 		<Box sx={{ width: '100%' }}>
-			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-				<Tabs value={value} onChange={handleChange} sx={{ mb: 2 }}>
+			<Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+				<Tabs value={value} onChange={handleChange}>
 					{renderedHeads}
 				</Tabs>
-				{renderedContents}
 			</Box>
+			{renderedContents}
 		</Box>
 	);
 }

@@ -12,6 +12,9 @@ const courseRouter = require('./routes/courseRoute');
 const categoryRouter = require('./routes/categoryRoute');
 const lectureRouter = require('./routes/lectureRoute');
 const enrollmentRouter = require('./routes/enrollmentRoute');
+const fileRouter = require('./routes/fileRoute');
+const sectionRouter = require('./routes/sectionRoute');
+const reviewRouter = require('./routes/reviewRoute');
 
 const app = express();
 
@@ -39,6 +42,9 @@ app.use('/api/v1/courses', courseRouter);
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/lectures', lectureRouter);
 app.use('/api/v1/enrollments', enrollmentRouter);
+app.use('/api/v1/files', fileRouter);
+app.use('/api/v1/sections', sectionRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 // Error thrwoing middleware for invalid routes
 app.all('*', (req, res, next) => {

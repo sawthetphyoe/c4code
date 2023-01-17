@@ -12,19 +12,10 @@ exports.getCategory = controllerFactory.getOne(Category);
 
 exports.updateCategory = catchAsync(async (req, res, next) => {
   req.body.updatedAt = Date.now();
-  const courses = await Course.find({ category: req.params.id });
-  if (!courses) {
-    console.log('No courses with this category');
-  }
-  const numberOfCourses = courses.length;
-  const doc = await Category.findByIdAndUpdate(
-    req.params.id,
-    { ...req.body, numberOfCourses },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const doc = await Category.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!doc) {
     return next(new AppError('No document found with that ID', 404));

@@ -92,7 +92,7 @@ export default function CourseList({ searchTerm }) {
 		<>
 			{results.isError && <Error message={results.error.data.message} />}
 
-			<TableContainer sx={{ maxHeight: 800 }}>
+			<TableContainer sx={{ maxHeight: 800, minHeight: 400 }}>
 				<Table stickyHeader>
 					<TableHead>{renderedTableHeads}</TableHead>
 					<TableBody>{renderedTableRows}</TableBody>
