@@ -143,10 +143,13 @@ const coursesApi = createApi({
 			}),
 			getAllFiles: builder.query({
 				providesTags: (result, error) => (result ? [{ type: 'file' }] : []),
-				query: (query) => {
-					const url = query ? `?uploadedBy=${query}` : '';
+				query: (options) => {
+					// options = { key: 'student', value: 'ID'}
+					const queryString = options
+						? '?' + options.map((opt) => `${opt.key}=${opt.value}`).join('&')
+						: '';
 					return {
-						url: `files/${url}`,
+						url: `files${queryString}`,
 						method: 'GET',
 					};
 				},
@@ -163,7 +166,7 @@ const coursesApi = createApi({
 			}),
 			createSection: builder.mutation({
 				invalidatesTags: (result, error, section) =>
-					result ? [{ type: 'section', id: section._id }] : [],
+					result ? [{ type: 'section' }] : [],
 				query: (section) => {
 					return {
 						url: 'sections',
@@ -194,14 +197,18 @@ const coursesApi = createApi({
 								}),
 						  ]
 						: [],
-				query: () => {
+				query: (options) => {
+					// options = { key: 'course', value: 'ID'}
+					const queryString = options
+						? '?' + options.map((opt) => `${opt.key}=${opt.value}`).join('&')
+						: '';
 					return {
-						url: 'sections',
+						url: `sections${queryString}`,
 						method: 'GET',
 					};
 				},
 			}),
-			updatesection: builder.mutation({
+			updateSection: builder.mutation({
 				invalidatesTags: (result, error, section) =>
 					result ? [{ type: 'section', id: section.id }] : [],
 				query: (section) => {
@@ -245,6 +252,26 @@ const coursesApi = createApi({
 				query: (id) => {
 					return {
 						url: `lectures/${id}`,
+						method: 'GET',
+					};
+				},
+			}),
+			getAllLectures: builder.query({
+				providesTags: (result, error) =>
+					result
+						? [
+								...result.data.data.map((lecture) => {
+									return { type: 'lecture', id: lecture._id };
+								}),
+						  ]
+						: [],
+				query: (options) => {
+					// options = { key: 'section', value: 'ID'}
+					const queryString = options
+						? '?' + options.map((opt) => `${opt.key}=${opt.value}`).join('&')
+						: '';
+					return {
+						url: `lectures${queryString}`,
 						method: 'GET',
 					};
 				},
@@ -315,7 +342,7 @@ const coursesApi = createApi({
 				},
 			}),
 			getAllReview: builder.query({
-				providesTags: (result, error, option) =>
+				providesTags: (result, error, options) =>
 					result
 						? [
 								...result.data.data.map((review) => {
@@ -323,11 +350,13 @@ const coursesApi = createApi({
 								}),
 						  ]
 						: [],
-				query: (option) => {
-					// option = { filter: 'student', value: 'ID'}
-					const queryString = `${option.filter}=${option.value}`;
+				query: (options) => {
+					// options = { key: 'student', value: 'ID'}
+					const queryString = options
+						? '?' + options.map((opt) => `${opt.key}=${opt.value}`).join('&')
+						: '';
 					return {
-						url: `reviews?${queryString}`,
+						url: `reviews${queryString}`,
 						method: 'GET',
 					};
 				},
@@ -374,11 +403,12 @@ export const {
 	useDeleteFileMutation,
 	useCreateLectureMutation,
 	useGetLectureQuery,
+	useGetAllLecturesQuery,
 	useUpdateLectureMutation,
 	useDeleteLectureMutation,
 	useCreateSectionMutation,
 	useDeleteSectionMutation,
-	useUpdatesectionMutation,
+	useUpdateSectionMutation,
 	useGetAllSectionsQuery,
 	useGetSectionQuery,
 	useCreateReviewMutation,

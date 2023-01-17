@@ -40,6 +40,7 @@ export {
 	useDeleteCourseMutation,
 	useCreateLectureMutation,
 	useGetLectureQuery,
+	useGetAllLecturesQuery,
 	useUpdateLectureMutation,
 	useDeleteLectureMutation,
 	useUploadFileMutation,
@@ -50,4 +51,9 @@ export {
 	useUpdateCategoryMutation,
 	useDeleteCategoryMutation,
 	useGetCategoryQuery,
+	useCreateSectionMutation,
+	useDeleteSectionMutation,
+	useUpdateSectionMutation,
+	useGetAllSectionsQuery,
+	useGetSectionQuery,
 } from './apis/coursesApi';

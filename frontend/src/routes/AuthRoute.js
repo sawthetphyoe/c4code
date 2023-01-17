@@ -11,6 +11,7 @@ export default function AuthRoute() {
 		return <Loading loading background="#95ADBE" loaderColor="#574F7D" />;
 
 	if (error) {
+		console.log(error);
 		return (
 			<Navigate to="/login" replace state={{ message: error.data.message }} />
 		);

@@ -18,7 +18,10 @@ const tableHeads = ['NAME', 'UPLOADED AT', '', ''];
 
 export default function UserFileTab() {
 	const { id } = useParams();
-	const { data, error, isLoading, isFetching } = useGetAllFilesQuery(id);
+	const { data, error, isLoading, isFetching } = useGetAllFilesQuery({
+		filter: 'uploadedBy',
+		value: id,
+	});
 	const [deleteFile, deleteResults] = useDeleteFileMutation();
 	const [downloadFile, setDownloadFile] = useState('');
 
