@@ -1,4 +1,4 @@
-import { Container, Paper } from '@mui/material';
+import { Box, Container, Paper } from '@mui/material';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
 
 import Tab from '../components/Tab';
@@ -60,15 +60,17 @@ export default function CourseInfoPage() {
 					]}
 					currentPage={isLoading ? '-' : course.name}
 				/>
-				<Tab
-					heads={tabHeadings}
-					tabs={[
-						<CourseInfoTab />,
-						<CourseContentTab />,
-						<CourseUserTab />,
-						<CourseFileTab />,
-					]}
-				/>
+				<Box minHeight={700}>
+					<Tab
+						heads={tabHeadings}
+						tabs={[
+							<CourseInfoTab />,
+							<CourseContentTab />,
+							<CourseUserTab />,
+							<CourseFileTab />,
+						]}
+					/>
+				</Box>
 			</Paper>
 		</Container>
 	);

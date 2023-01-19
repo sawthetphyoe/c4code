@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
-import { useGetSectionQuery } from '../store';
+import { useDeleteSectionMutation, useGetAllLecturesQuery } from '../store';
 import LoadingBar from '../ultis/LoadingBar';
 import Error from '../ultis/Error';
+import EditSectionOverlay from './EditSectionOverlay';
+import LectureRow from './LectureRow';
+import AddLectureOverlay from './AddLectureOverlay';
 
 const Accordion = styled((props) => (
 	<MuiAccordion disableGutters elevation={0} {...props} />
@@ -43,55 +45,132 @@ const AccordionSummary = styled((props) => (
 }));
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+	backgroundColor: 'rgba(170, 170, 170, .15)',
 	padding: theme.spacing(2),
 	borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-export default function SectionAccordion({
-	sectionId,
-	expanded,
-	handleChange,
-}) {
-	const { data, error, isLoading, isFetching } = useGetSectionQuery(sectionId);
+export default function SectionAccordion({ section, expanded, handleChange }) {
+	const { data, error, isLoading, isFetching } = useGetAllLecturesQuery([
+		{
+			key: 'section',
+			value: section._id,
+		},
+	]);
+	const [deleteSection, results] = useDeleteSectionMutation();
+	const [secModalOpen, setSecModalOpen] = React.useState(false);
+	const [addLecModalOpen, setAddLecModalOpen] = React.useState(false);
+
+	const onSecModalClose = React.useCallback(() => {
+		setSecModalOpen(false);
+	}, []);
+
+	const onAddLecModalClose = React.useCallback(() => {
+		setAddLecModalOpen(false);
+	}, []);
 
 	if (isLoading) return <LoadingBar />;
 
 	if (error) return <Error message={error.data.message} />;
 
-	const section = data.data.data;
+	const lectures = data.data.data;
+
+	const renderedLectures = lectures.map((lecture) => {
+		return (
+			<LectureRow
+				key={lecture._id}
+				lecture={lecture}
+				courseId={section.course}
+			/>
+		);
+	});
 
 	return (
 		<Accordion
 			expanded={expanded === section._id}
 			onChange={handleChange(section._id)}
 		>
+			{(results.isLoading || isFetching) && <LoadingBar />}
+
 			<AccordionSummary
 				aria-controls="panel1d-content"
 				id="panel1d-header"
 				expanded={expanded}
+				sx={{
+					backgroundColor:
+						expanded === section._id
+							? 'rgba(170, 170, 170, .05)'
+							: 'rgba(170, 170, 170, .15)',
+				}}
 			>
-				<Typography variant="h6" sx={{ fontSize: 18 }}>
-					{section.name}
-				</Typography>
+				<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+					<Typography
+						variant="h6"
+						sx={{
+							fontSize: 18,
+							fontWeight: 'bold',
+							textTransform: 'uppercase',
+						}}
+					>
+						{section.name}
+					</Typography>
+					<Typography sx={{ lineHeight: '100%', fontSize: 14 }}>
+						({section.duration?.toFixed(1) || 0} hrs)
+					</Typography>
+				</Box>
 			</AccordionSummary>
-			<Box sx={{ display: 'flex', gap: 2, alignItems: 'center', p: 1, pl: 2 }}>
-				<Button size="small">
+			<Box
+				sx={{
+					display: 'flex',
+					gap: 2,
+					alignItems: 'center',
+					p: 1,
+					pl: 4,
+					backgroundColor:
+						expanded === section._id
+							? 'rgba(170, 170, 170, .05)'
+							: 'rgba(170, 170, 170, .15)',
+				}}
+			>
+				<Button size="small" onClick={() => setSecModalOpen(true)}>
 					<EditRoundedIcon fontSize="small" sx={{ mr: 1 }} />
 					Edit
 				</Button>
-				<Button size="small">
+				<Button size="small" onClick={() => deleteSection(section)}>
 					<DeleteRoundedIcon fontSize="small" sx={{ mr: 1 }} />
 					Delete
 				</Button>
 			</Box>
-			<AccordionDetails>
-				<Typography>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-					malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-					dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-					lacus ex, sit amet blandit leo lobortis eget.
-				</Typography>
+			<AccordionDetails
+				sx={{
+					backgroundColor:
+						expanded === section._id
+							? 'rgba(170, 170, 170, .05)'
+							: 'rgba(170, 170, 170, .15)',
+				}}
+			>
+				<Stack spacing={1}>
+					{renderedLectures}
+					<Button
+						size="small"
+						sx={{ backgroundColor: '#E2E2E2', pt: 1, pb: 1 }}
+						onClick={() => setAddLecModalOpen(true)}
+					>
+						+ Add Lecture
+					</Button>
+				</Stack>
 			</AccordionDetails>
+			<EditSectionOverlay
+				unChangedSection={section}
+				open={secModalOpen}
+				onClose={onSecModalClose}
+			/>
+			<AddLectureOverlay
+				courseId={section.course}
+				sectionId={section._id}
+				open={addLecModalOpen}
+				onClose={onAddLecModalClose}
+			/>
 		</Accordion>
 	);
 }

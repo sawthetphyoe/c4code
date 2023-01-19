@@ -166,7 +166,7 @@ const coursesApi = createApi({
 			}),
 			createSection: builder.mutation({
 				invalidatesTags: (result, error, section) =>
-					result ? [{ type: 'section' }] : [],
+					result ? ['allSection'] : [],
 				query: (section) => {
 					return {
 						url: 'sections',
@@ -195,6 +195,7 @@ const coursesApi = createApi({
 										id: section._id,
 									};
 								}),
+								'allSection',
 						  ]
 						: [],
 				query: (options) => {
@@ -210,7 +211,12 @@ const coursesApi = createApi({
 			}),
 			updateSection: builder.mutation({
 				invalidatesTags: (result, error, section) =>
-					result ? [{ type: 'section', id: section.id }] : [],
+					result
+						? [
+								{ type: 'section', id: section.id },
+								{ type: 'course', id: section.course },
+						  ]
+						: [],
 				query: (section) => {
 					return {
 						url: `sections/${section.id}`,
@@ -220,29 +226,29 @@ const coursesApi = createApi({
 				},
 			}),
 			deleteSection: builder.mutation({
-				invalidatesTags: (result, error, id) =>
-					!error ? [{ type: 'section' }] : [],
-				query: (id) => {
+				invalidatesTags: (result, error, section) =>
+					!error ? ['allSection', { type: 'course', id: section.course }] : [],
+				query: (section) => {
 					return {
-						url: `sections/${id}`,
+						url: `sections/${section._id}`,
 						method: 'DELETE',
 					};
 				},
 			}),
 			createLecture: builder.mutation({
-				invalidatesTags: (result, error, lecture) =>
+				invalidatesTags: (result, error, data) =>
 					result
 						? [
-								{ type: 'lecture' },
-								{ type: 'section', id: lecture.section._id },
-								{ type: 'course', id: lecture.section.course._id },
+								'lectures',
+								{ type: 'section', id: data.lecture.section },
+								{ type: 'course', id: data.courseId },
 						  ]
 						: [],
-				query: (lecture) => {
+				query: (data) => {
 					return {
 						url: 'lectures',
 						method: 'POST',
-						body: lecture,
+						body: data.lecture,
 					};
 				},
 			}),
@@ -263,6 +269,7 @@ const coursesApi = createApi({
 								...result.data.data.map((lecture) => {
 									return { type: 'lecture', id: lecture._id };
 								}),
+								'lectures',
 						  ]
 						: [],
 				query: (options) => {
@@ -277,34 +284,34 @@ const coursesApi = createApi({
 				},
 			}),
 			updateLecture: builder.mutation({
-				invalidatesTags: (result, error, lecture) =>
+				invalidatesTags: (result, error, data) =>
 					result
 						? [
-								{ type: 'lecture', id: lecture.id },
-								{ type: 'section', id: lecture.section._id },
-								{ type: 'course', id: lecture.section.course._id },
+								{ type: 'lecture', id: data.lecture._id },
+								{ type: 'section', id: data.lecture.section },
+								{ type: 'course', id: data.courseId },
 						  ]
 						: [],
-				query: (lecture) => {
+				query: (data) => {
 					return {
-						url: `lectures/${lecture.id}`,
+						url: `lectures/${data.lecture._id}`,
 						method: 'PATCH',
-						body: lecture,
+						body: data.lecture,
 					};
 				},
 			}),
 			deleteLecture: builder.mutation({
-				invalidatesTags: (result, error, lecture) =>
+				invalidatesTags: (result, error, data) =>
 					!error
 						? [
-								{ type: 'lecture', id: lecture.id },
-								{ type: 'section', id: lecture.section._id },
-								{ type: 'course', id: lecture.section.course._id },
+								'lectures',
+								{ type: 'section', id: data.lecture.section },
+								{ type: 'course', id: data.courseId },
 						  ]
 						: [],
-				query: (lecture) => {
+				query: (data) => {
 					return {
-						url: `lectures/${lecture.id}`,
+						url: `lectures/${data.lecture._id}`,
 						method: 'DELETE',
 					};
 				},

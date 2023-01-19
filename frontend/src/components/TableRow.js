@@ -31,6 +31,7 @@ const StyledTableRow = styled(MuiTableRow)(({ theme }) => ({
 export default function TableRow({
 	id,
 	name,
+	rawData,
 	data,
 	onEdit,
 	onDownload,
@@ -45,7 +46,7 @@ export default function TableRow({
 
 			{onEdit && (
 				<StyledTableCell style={{ padding: 0 }}>
-					<IconButton onClick={() => onEdit(id)}>
+					<IconButton onClick={() => onEdit(rawData || id)}>
 						<EditRoundedIcon />
 					</IconButton>
 				</StyledTableCell>

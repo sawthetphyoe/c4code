@@ -80,8 +80,8 @@ export default function CourseFileTab() {
 					pb: 4,
 				}}
 			>
-				<Button component="label" variant="outlined">
-					+ upload file
+				<Button component="label" variant="contained">
+					{uploadResults.isLoading ? 'uploading...' : '+ upload file'}
 					<input
 						hidden
 						accept="application/pdf"
@@ -143,7 +143,7 @@ export default function CourseFileTab() {
 				<Error message={deleteResults.error.data.message} />
 			)}
 
-			<Button component="label" variant="outlined">
+			<Button component="label" variant="contained">
 				{uploadResults.isLoading ? 'uploading...' : '+ upload file'}
 				<input
 					hidden

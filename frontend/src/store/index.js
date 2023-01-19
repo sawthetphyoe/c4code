@@ -30,6 +30,11 @@ export {
 	useCheckLoginQuery,
 	useUserLogoutMutation,
 	useResetPasswordMutation,
+	useCreateEnrollmentMutation,
+	useDeleteEnrollmentMutation,
+	useUpdateEnrollmentMutation,
+	useGetAllEnrollmentsQuery,
+	useGetEnrollmentQuery,
 } from './apis/usersApi';
 
 export {

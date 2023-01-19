@@ -39,8 +39,9 @@ function UsersPage() {
 						flexDirection: 'column',
 						alignItems: 'flex-start',
 						gap: 4,
-						mt: 4,
-						mb: 4,
+						pt: 4,
+						pb: 4,
+						minHeight: 700,
 					}}
 				>
 					<Button variant="contained" onClick={() => setModalOpen(true)}>

@@ -4,7 +4,7 @@ import { useGetCourseQuery } from '../store';
 import Error from '../ultis/Error';
 import LoadingBar from '../ultis/LoadingBar';
 
-export default function CourseSummaryCard() {
+export default function CourseSummary() {
 	const { id } = useParams();
 	const { data, error, isLoading, isFetching } = useGetCourseQuery(id);
 
@@ -33,6 +33,9 @@ export default function CourseSummaryCard() {
 					({course.numOfRating || 0} Reviews)
 				</Typography>
 			</Box>
+			<Typography variant="body2">
+				({course.duration?.toFixed(1) || 0} total hours)
+			</Typography>
 			<Typography variant="body1" align="justify">
 				{course.description}
 			</Typography>

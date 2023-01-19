@@ -40,6 +40,7 @@ export default function CoursesPage() {
 						gap: 4,
 						pt: 4,
 						pb: 4,
+						minHeight: 700,
 					}}
 				>
 					<Button variant="contained" onClick={() => setModalOpen(true)}>

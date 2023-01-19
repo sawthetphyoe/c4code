@@ -1,4 +1,4 @@
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button, Container, Divider, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetAllSectionsQuery } from '../store';
@@ -6,9 +6,10 @@ import Error from '../ultis/Error';
 import LoadingBar from '../ultis/LoadingBar';
 import AddSectionOverlay from './AddSectionOverlay';
 import SectionAccordion from './SectionAccordion';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import { Stack } from '@mui/system';
+import SkeletonList from '../ultis/SkeletonList';
 
-export default function CourseContent() {
+export default function CourseMaterials() {
 	const { id } = useParams();
 	const { data, error, isLoading, isFetching } = useGetAllSectionsQuery([
 		{
@@ -28,14 +29,20 @@ export default function CourseContent() {
 	const handleChange = (panel) => (event, newExpanded) => {
 		setExpanded(newExpanded ? panel : undefined);
 	};
-	if (isLoading) return <LoadingBar />;
+	if (isLoading)
+		return (
+			<Container>
+				<LoadingBar />
+				<SkeletonList times={6} spacing={1} />
+			</Container>
+		);
 
 	if (error) return <Error message={error.data.message} />;
 
 	const sections = data.data.data.map((section, index) => (
 		<Box key={section._id}>
 			<SectionAccordion
-				sectionId={section._id}
+				section={section}
 				handleChange={handleChange}
 				expanded={expanded}
 			/>
@@ -51,10 +58,11 @@ export default function CourseContent() {
 				alignItems: 'flex-start',
 			}}
 		>
+			{isFetching && <LoadingBar />}
 			<Button variant="contained" onClick={() => setModalOpen(true)}>
-				add section
+				+ add section
 			</Button>
-			<Box
+			<Container
 				sx={{
 					pt: 1,
 					pb: 1,
@@ -64,8 +72,14 @@ export default function CourseContent() {
 					borderRadius: '.3rem',
 				}}
 			>
-				{sections}
-			</Box>
+				{data.results === 0 ? (
+					<Typography variant="h6" textAlign="center" p={4}>
+						No contents yet!
+					</Typography>
+				) : (
+					<Stack divider={<Divider />}>{sections}</Stack>
+				)}
+			</Container>
 			<AddSectionOverlay open={modalOpen} onClose={onModalClose} />
 		</Box>
 	);

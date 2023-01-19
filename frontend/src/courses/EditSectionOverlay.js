@@ -5,23 +5,29 @@ import Dialog from '@mui/material/Dialog';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { AppBar, Grid, IconButton, Typography } from '@mui/material';
 import LoadingBar from '../ultis/LoadingBar';
-import { useCreateSectionMutation } from '../store';
-import { useParams } from 'react-router-dom';
+import { useUpdateSectionMutation } from '../store';
 
-export default function AddSectionOverlay({ open, onClose }) {
-	const { id } = useParams();
-	const [createSection, results] = useCreateSectionMutation();
+export default function EditSectionOverlay({
+	unChangedSection,
+	open,
+	onClose,
+}) {
+	const [updateSection, results] = useUpdateSectionMutation();
 	const [edit, setEdit] = useState(false);
 	const [section, setSection] = useState({
-		name: '',
-		course: id,
-		index: 1,
+		id: unChangedSection._id,
+		name: unChangedSection.name,
+		index: unChangedSection.index,
 	});
 
 	const handleCancel = useCallback(() => {
-		setSection({ name: '', index: 1, course: id });
+		setSection({
+			id: unChangedSection._id,
+			name: unChangedSection.name,
+			index: unChangedSection.index,
+		});
 		setEdit(false);
-	}, [id]);
+	}, [unChangedSection]);
 
 	useEffect(() => {
 		if (results.isSuccess) {
@@ -41,9 +47,15 @@ export default function AddSectionOverlay({ open, onClose }) {
 		setEdit(true);
 	};
 
-	const handleCreateCategorySubmit = (e) => {
+	const handleUpdateCategorySubmit = (e) => {
 		e.preventDefault();
-		createSection(section);
+		updateSection({
+			id: section.id,
+			body: {
+				name: section.name,
+				index: section.index,
+			},
+		});
 	};
 
 	const handleClose = () => {
@@ -70,7 +82,7 @@ export default function AddSectionOverlay({ open, onClose }) {
 					}}
 				>
 					<Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>
-						Add Section
+						Edit {unChangedSection.name}
 					</Typography>
 					<IconButton onClick={() => handleClose()}>
 						<CloseRoundedIcon sx={{ color: 'white' }} />
@@ -81,7 +93,7 @@ export default function AddSectionOverlay({ open, onClose }) {
 					container
 					spacing={4}
 					component="form"
-					onSubmit={handleCreateCategorySubmit}
+					onSubmit={handleUpdateCategorySubmit}
 					sx={{ pt: 4, pb: 4, pl: 8, pr: 8, width: 900 }}
 				>
 					<Grid item sm={2}>
@@ -111,7 +123,7 @@ export default function AddSectionOverlay({ open, onClose }) {
 							disabled={!edit}
 							type="submit"
 						>
-							add section
+							SAVE
 						</Button>
 					</Grid>
 					<Grid item sm={6}>

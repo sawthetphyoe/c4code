@@ -24,7 +24,8 @@ span.secondary-link:hover {
 	left: 0;
 	width: 100%;
 	background: #21af31;
-	height: 8px;
+	height: 6px;
+	margin-top: 77px;
 	animation: progress 1s infinite;
 }
 

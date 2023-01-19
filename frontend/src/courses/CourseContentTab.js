@@ -1,6 +1,6 @@
 import { Container, Grid } from '@mui/material';
-import CourseSummaryCard from './CourseSummaryCard';
-import CourseContent from './CourseContent';
+import CourseSummary from './CourseSummary';
+import CourseMaterials from './CourseMaterials';
 
 export default function CourseContentTab() {
 	// const {
@@ -12,12 +12,12 @@ export default function CourseContentTab() {
 
 	return (
 		<Container maxWidth="lg" sx={{ pl: 3, pr: 3 }}>
-			<Grid container spacing={4}>
+			<Grid container spacing={8}>
 				<Grid item sm={4}>
-					<CourseSummaryCard />
+					<CourseSummary />
 				</Grid>
 				<Grid item sm={8}>
-					<CourseContent />
+					<CourseMaterials />
 				</Grid>
 			</Grid>
 		</Container>

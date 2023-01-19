@@ -17,7 +17,7 @@ const tableHeads = ['NAME', 'CREATED AT', 'NUMBER OF COURSES', '', ''];
 
 export default function UserList({ searchTerm }) {
 	const navigate = useNavigate();
-	const { data, error, isFetching } = useGetAllCategoriesQuery();
+	const { data, error, isLoading, isFetching } = useGetAllCategoriesQuery();
 	const [deleteCategory, results] = useDeleteCategoryMutation();
 
 	const handleCateEdit = (id) => {
@@ -30,7 +30,7 @@ export default function UserList({ searchTerm }) {
 
 	if (error) return <Error message={error.data.message} />;
 
-	if (isFetching || results.isLoading) {
+	if (isLoading || isFetching || results.isLoading) {
 		return (
 			<Container maxWidth="lg">
 				<LoadingBar />

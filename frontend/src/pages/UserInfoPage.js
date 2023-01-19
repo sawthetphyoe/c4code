@@ -1,4 +1,4 @@
-import { Container, Paper } from '@mui/material';
+import { Box, Container, Paper } from '@mui/material';
 import BreadcrumbsBar from '../components/BreadcrumbsBar';
 import UserInfoTab from '../users/UserInfoTab';
 import Tab from '../components/Tab';
@@ -60,10 +60,12 @@ export default function UserInfoPage() {
 					]}
 					currentPage={isFetching ? '-' : formattedName}
 				/>
-				<Tab
-					heads={tabHeadings}
-					tabs={[<UserInfoTab />, <UserCourseTab />, <UserFileTab />]}
-				/>
+				<Box minHeight={700}>
+					<Tab
+						heads={tabHeadings}
+						tabs={[<UserInfoTab />, <UserCourseTab />, <UserFileTab />]}
+					/>
+				</Box>
 			</Paper>
 		</Container>
 	);
