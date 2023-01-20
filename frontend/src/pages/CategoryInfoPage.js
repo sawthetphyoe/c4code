@@ -48,7 +48,7 @@ export default function CategoryInfoPage() {
 	const category = data.data.data;
 
 	return (
-		<Container maxWidth="md">
+		<Container maxWidth="md" sx={{ mt: 8 }}>
 			{(isFetching || results.isLoading) && <LoadingBar />}
 
 			<Paper sx={{ height: '100%', overflow: 'hidden' }}>

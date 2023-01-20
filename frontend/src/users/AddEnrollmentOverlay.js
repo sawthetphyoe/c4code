@@ -83,7 +83,7 @@ export default function AddEnrollmentOverlay({ assignCourses, open, onClose }) {
 	if (error) return <Error message={error.data.message} />;
 
 	const newCourses = data.data.data
-		.filter((course) => !assignCourses.includes(course._id))
+		.filter((course) => !assignCourses?.includes(course._id))
 		.map((course) => {
 			return { value: course._id, label: course.name };
 		});

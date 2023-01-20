@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const AppError = require('./../utlis/appError');
 
 const popOptions = [
-  { path: 'student', select: 'firstName lastName email' },
+  { path: 'student', select: 'firstName lastName email role' },
   { path: 'course', select: 'name' },
   { path: 'completedLectures', select: 'name' },
 ];

@@ -18,7 +18,7 @@ export default function CoursesPage() {
 	}, []);
 
 	return (
-		<Container maxWidth="xl">
+		<Container maxWidth="xl" sx={{ mt: 8 }}>
 			<Paper>
 				<BreadcrumbsBar
 					paths={[

@@ -318,43 +318,35 @@ const coursesApi = createApi({
 			}),
 			createReview: builder.mutation({
 				invalidatesTags: (result, error, review) =>
-					result
-						? [
-								{ type: 'review', id: review.id },
-								{ type: 'course', id: review.course._id },
-						  ]
-						: [],
+					result ? ['allReviews'] : [],
 				query: (review) => {
 					return {
 						url: 'reviews',
 						method: 'POST',
-						body: review.body,
+						body: review,
 					};
 				},
 			}),
 			updateReview: builder.mutation({
-				invalidatesTags: (result, error, review) =>
-					result
-						? [
-								{ type: 'review', id: review.id },
-								{ type: 'course', id: review.course._id },
-						  ]
-						: [],
+				invalidatesTags: (result, error, review) => {
+					return result ? [{ type: 'review', id: review._id }] : [];
+				},
 				query: (review) => {
 					return {
-						url: `reviews/${review.id}`,
+						url: `reviews/${review._id}`,
 						method: 'PATCH',
-						body: review.body,
+						body: review,
 					};
 				},
 			}),
 			getAllReview: builder.query({
-				providesTags: (result, error, options) =>
+				providesTags: (result, error) =>
 					result
 						? [
 								...result.data.data.map((review) => {
 									return { type: 'review', id: review._id };
 								}),
+								'allReviews',
 						  ]
 						: [],
 				query: (options) => {
@@ -381,7 +373,7 @@ const coursesApi = createApi({
 			deleteReview: builder.mutation({
 				invalidatesTags: (result, error, review) =>
 					!error
-						? [{ type: 'review' }, { type: 'course', id: review.course._id }]
+						? ['allReviews', { type: 'course', id: review.course._id }]
 						: [],
 				query: (id) => {
 					return {

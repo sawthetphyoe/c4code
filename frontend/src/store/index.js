@@ -61,4 +61,9 @@ export {
 	useUpdateSectionMutation,
 	useGetAllSectionsQuery,
 	useGetSectionQuery,
+	useCreateReviewMutation,
+	useDeleteReviewMutation,
+	useGetAllReviewQuery,
+	useGetReviewQuery,
+	useUpdateReviewMutation,
 } from './apis/coursesApi';

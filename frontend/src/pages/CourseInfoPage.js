@@ -45,7 +45,7 @@ export default function CourseInfoPage() {
 	const course = data.data.data;
 
 	return (
-		<Container maxWidth="xl">
+		<Container maxWidth="xl" sx={{ mt: 8 }}>
 			<Paper sx={{ height: '100%', overflow: 'hidden' }}>
 				<BreadcrumbsBar
 					paths={[

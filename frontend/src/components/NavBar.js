@@ -27,7 +27,7 @@ export default function NavBar() {
 	};
 
 	return (
-		<StyledAppBar position="sticky" sx={{ mb: 8, pt: 2, pb: 2 }}>
+		<StyledAppBar position="sticky" sx={{ pt: 2, pb: 2 }}>
 			<Container
 				maxWidth="xl"
 				sx={{ display: 'flex', justifyContent: 'space-between' }}

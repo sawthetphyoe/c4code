@@ -53,7 +53,7 @@ export default function LoginPage() {
 		<Container
 			component="form"
 			maxWidth="sm"
-			sx={{ mt: 4 }}
+			sx={{ mt: 12 }}
 			onSubmit={handleSubmit}
 		>
 			<Box>

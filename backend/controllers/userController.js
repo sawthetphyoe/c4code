@@ -1,5 +1,7 @@
 const AppError = require('./../utlis/appError');
 const User = require('./../models/userModel');
+const Enrollment = require('./../models/enrollmentModel');
+const File = require('./../models/fileModel');
 const APIFeatures = require('./../utlis/apiFeatures');
 const catchAsync = require('./../utlis/catchAsync');
 const controllerFactory = require('./ControllerFactory');
@@ -119,6 +121,14 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
   }
 
   await User.findByIdAndDelete(req.params.id);
+
+  await Enrollment.deleteMany({ student: user._id });
+
+  await File.deleteMany({ uploadedBy: user._id });
+
+  fs.unlink(`${__dirname}/../public/images/${user.image}`, (err) => {
+    if (err) return next(new AppError('Cannot delete this photo', 404));
+  });
 
   res.status(204).json({
     status: 'success',

@@ -11,9 +11,9 @@ const courseSchema = new mongoose.Schema({
   },
   code: String,
   image: String,
-  ratingsAverage: Number,
-  numOfRating: Number,
-  duration: { type: Number },
+  ratingsAverage: { type: Number, default: 0 },
+  numOfRating: { type: Number, default: 0 },
+  duration: { type: Number, default: 0 },
   files: [
     {
       type: mongoose.Schema.ObjectId,

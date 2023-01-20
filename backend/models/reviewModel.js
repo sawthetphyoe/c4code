@@ -10,6 +10,7 @@ const reviewSchema = new mongoose.Schema({
     type: Number,
     min: 1,
     max: 5,
+    default: 0,
   },
   createdAt: {
     type: Date,
@@ -50,7 +51,7 @@ reviewSchema.statics.calcRating = async function (courseId) {
   } else {
     await Course.findByIdAndUpdate(courseId, {
       numOfRating: 0,
-      ratingsAverage: 4.5,
+      ratingsAverage: 0,
     });
   }
 };

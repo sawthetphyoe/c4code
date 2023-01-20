@@ -25,9 +25,5 @@ export default function AuthRoute() {
 
 	const user = data.data.data;
 
-	return user.role === 'admin' || user.role === 'super-admin' ? (
-		<AdminRoutes />
-	) : (
-		<StudentRoutes />
-	);
+	return user.role === 'student' ? <StudentRoutes /> : <AdminRoutes />;
 }

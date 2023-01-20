@@ -17,7 +17,7 @@ function CategoriesPage() {
 	}, []);
 
 	return (
-		<Container maxWidth="lg">
+		<Container maxWidth="lg" sx={{ mt: 8 }}>
 			<Paper sx={{ height: '100%', overflow: 'hidden' }}>
 				<BreadcrumbsBar
 					paths={[

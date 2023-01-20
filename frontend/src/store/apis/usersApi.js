@@ -99,7 +99,7 @@ const usersApi = createApi({
 					!error ? ['user', 'loginUser'] : [],
 				query: () => {
 					return {
-						url: 'usesrs/logout',
+						url: 'users/logout',
 						method: 'GET',
 					};
 				},
