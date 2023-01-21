@@ -36,7 +36,7 @@ export default function StudentHomePage() {
 
 	return (
 		<>
-			<Box sx={{ height: '140px', bgcolor: '#1E1E1E', width: '100%' }}>
+			<Box sx={{ height: '125px', bgcolor: '#1E1E1E', width: '100%' }}>
 				<Container maxWidth="lg">
 					<Typography
 						variant="h4"

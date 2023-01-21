@@ -7,6 +7,13 @@ import Error from '../ultis/Error';
 import LoadingBar from '../ultis/LoadingBar';
 import EditLectureOverlay from './EditLectureOverlay';
 
+const formatDuration = (hour) => {
+	if (!hour) return '(0 hr)';
+	if (hour === 1) return `(${hour.toFixed(1)} hr)`;
+	if (hour > 1) return `(${hour.toFixed(1)} hrs)`;
+	if (hour < 1) return `(${Math.round(hour * 60)} mins)`;
+};
+
 export default function LectureRow({ lecture, courseId }) {
 	const [deleteLecture, deleteResults] = useDeleteLectureMutation();
 	const [modalOpen, setModalOpen] = useState(false);
@@ -45,7 +52,7 @@ export default function LectureRow({ lecture, courseId }) {
 						{lecture.name}
 					</Typography>
 					<Typography variant="caption" sx={{ lineHeight: '100%' }}>
-						({lecture.duration} hrs)
+						{formatDuration(lecture.duration)}
 					</Typography>
 				</Box>
 				<Stack direction="row" spacing={2}>

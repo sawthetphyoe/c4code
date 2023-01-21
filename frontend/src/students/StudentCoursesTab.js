@@ -1,4 +1,4 @@
-import { Box, Container, Grid } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { useGetAllCoursesQuery, useGetAllEnrollmentsQuery } from '../store';
 import Error from '../ultis/Error';
 import LoadingBar from '../ultis/LoadingBar';
@@ -29,7 +29,18 @@ export default function StudentCourseTab({ user }) {
 	if (courseError) return <Error message={courseError.data.message} />;
 
 	if (enrolData.results === 0)
-		return <Container maxWidth="lg">No Courses</Container>;
+		return (
+			<Container
+				maxWidth="lg"
+				sx={{
+					display: 'flex',
+					justifyContent: 'center',
+					mt: 4,
+				}}
+			>
+				<Typography variant="h4">No Courses!</Typography>
+			</Container>
+		);
 
 	const studentEnrollments = enrolData.data.data;
 

@@ -1,25 +1,22 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import { Box, Button, Stack } from '@mui/material';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import { Box, Stack } from '@mui/material';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
-import { useDeleteSectionMutation, useGetAllLecturesQuery } from '../store';
+import { useGetAllLecturesQuery } from '../store';
 import LoadingBar from '../ultis/LoadingBar';
 import Error from '../ultis/Error';
-import EditSectionOverlay from './EditSectionOverlay';
-import LectureRow from './LectureRow';
-import AddLectureOverlay from './AddLectureOverlay';
+import StudentLectureRow from './StudentLectureRow';
+import { useEffect } from 'react';
 
 const Accordion = styled((props) => (
 	<MuiAccordion disableGutters elevation={0} {...props} />
 ))(({ theme }) => ({
-	'&:not(:last-child)': {
-		borderBottom: 0,
+	borderBottom: '1px solid rgba(0, 0, 0, .125)',
+	'&:first-of-type': {
+		borderTop: '1px solid rgba(0, 0, 0, .125)',
 	},
 	'&:before': {
 		display: 'none',
@@ -34,7 +31,7 @@ const AccordionSummary = styled((props) => (
 		{...props}
 	/>
 ))(({ theme }) => ({
-	backgroundColor: 'rgba(170, 170, 170, .15)',
+	backgroundColor: '#EFF7FC',
 	flexDirection: 'row-reverse',
 	'& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
 		transform: 'rotate(90deg)',
@@ -46,8 +43,7 @@ const AccordionSummary = styled((props) => (
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 	backgroundColor: 'rgba(170, 170, 170, .15)',
-	padding: theme.spacing(2),
-	borderTop: '1px solid rgba(0, 0, 0, .125)',
+	padding: 0,
 }));
 
 const formatDuration = (hour) => {
@@ -57,8 +53,15 @@ const formatDuration = (hour) => {
 	if (hour < 1) return `(${Math.round(hour * 60)} mins)`;
 };
 
-export default function SectionAccordion({ section, expanded, handleChange }) {
-	const { data, error, isLoading, isFetching } = useGetAllLecturesQuery([
+export default function StudentSectionAccordion({
+	section,
+	expanded,
+	handleChange,
+	videoId,
+	onLectureChange,
+	enrollment,
+}) {
+	const { data, error, isLoading } = useGetAllLecturesQuery([
 		{
 			key: 'section',
 			value: section._id,
@@ -68,17 +71,13 @@ export default function SectionAccordion({ section, expanded, handleChange }) {
 			value: 'index',
 		},
 	]);
-	const [deleteSection, results] = useDeleteSectionMutation();
-	const [secModalOpen, setSecModalOpen] = React.useState(false);
-	const [addLecModalOpen, setAddLecModalOpen] = React.useState(false);
 
-	const onSecModalClose = React.useCallback(() => {
-		setSecModalOpen(false);
-	}, []);
-
-	const onAddLecModalClose = React.useCallback(() => {
-		setAddLecModalOpen(false);
-	}, []);
+	useEffect(() => {
+		if (data && section.index === 1 && !enrollment.currentLecture) {
+			const lectures = data.data.data;
+			onLectureChange(lectures[0]);
+		}
+	}, [enrollment.currentLecture, data, onLectureChange, section]);
 
 	if (isLoading) return <LoadingBar />;
 
@@ -88,21 +87,25 @@ export default function SectionAccordion({ section, expanded, handleChange }) {
 
 	const renderedLectures = lectures.map((lecture) => {
 		return (
-			<LectureRow
+			<StudentLectureRow
 				key={lecture._id}
+				videoId={videoId}
 				lecture={lecture}
-				courseId={section.course}
+				onLectureChange={onLectureChange}
+				enrollment={enrollment}
 			/>
 		);
 	});
 
+	const autoExpend = lectures
+		.map((lec) => lec.url.split('/')[3])
+		.includes(videoId);
+
 	return (
 		<Accordion
-			expanded={expanded === section._id}
+			expanded={expanded === section._id || autoExpend}
 			onChange={handleChange(section._id)}
 		>
-			{(results.isLoading || isFetching) && <LoadingBar />}
-
 			<AccordionSummary
 				aria-controls="panel1d-content"
 				id="panel1d-header"
@@ -112,14 +115,16 @@ export default function SectionAccordion({ section, expanded, handleChange }) {
 						expanded === section._id
 							? 'rgba(170, 170, 170, .05)'
 							: 'rgba(170, 170, 170, .15)',
+					pl: 4,
+					pr: 4,
 				}}
 			>
 				<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
 					<Typography
 						variant="h6"
 						sx={{
-							fontSize: 18,
-							fontWeight: 'bold',
+							fontSize: 16,
+							fontWeight: 'medium',
 							textTransform: 'uppercase',
 						}}
 					>
@@ -130,28 +135,6 @@ export default function SectionAccordion({ section, expanded, handleChange }) {
 					</Typography>
 				</Box>
 			</AccordionSummary>
-			<Box
-				sx={{
-					display: 'flex',
-					gap: 2,
-					alignItems: 'center',
-					p: 1,
-					pl: 4,
-					backgroundColor:
-						expanded === section._id
-							? 'rgba(170, 170, 170, .05)'
-							: 'rgba(170, 170, 170, .15)',
-				}}
-			>
-				<Button size="small" onClick={() => setSecModalOpen(true)}>
-					<EditRoundedIcon fontSize="small" sx={{ mr: 1 }} />
-					Edit
-				</Button>
-				<Button size="small" onClick={() => deleteSection(section)}>
-					<DeleteRoundedIcon fontSize="small" sx={{ mr: 1 }} />
-					Delete
-				</Button>
-			</Box>
 			<AccordionDetails
 				sx={{
 					backgroundColor:
@@ -160,28 +143,10 @@ export default function SectionAccordion({ section, expanded, handleChange }) {
 							: 'rgba(170, 170, 170, .15)',
 				}}
 			>
-				<Stack spacing={1}>
+				<Stack spacing={1} sx={{ pb: 1 }}>
 					{renderedLectures}
-					<Button
-						size="small"
-						sx={{ backgroundColor: '#E2E2E2', pt: 1, pb: 1 }}
-						onClick={() => setAddLecModalOpen(true)}
-					>
-						+ Add Lecture
-					</Button>
 				</Stack>
 			</AccordionDetails>
-			<EditSectionOverlay
-				unChangedSection={section}
-				open={secModalOpen}
-				onClose={onSecModalClose}
-			/>
-			<AddLectureOverlay
-				courseId={section.course}
-				sectionId={section._id}
-				open={addLecModalOpen}
-				onClose={onAddLecModalClose}
-			/>
 		</Accordion>
 	);
 }

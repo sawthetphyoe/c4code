@@ -4,6 +4,7 @@ import LinearProgress, {
 } from '@mui/material/LinearProgress';
 import { styled } from '@mui/material/styles';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGetAllReviewQuery } from '../store';
 import Error from '../ultis/Error';
 import LoadingBar from '../ultis/LoadingBar';
@@ -23,6 +24,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 export default function CourseCard({ course, enrollment }) {
+	const navigate = useNavigate();
 	const { data, error, isLoading, isFetching } = useGetAllReviewQuery([
 		{
 			key: 'course',
@@ -55,7 +57,7 @@ export default function CourseCard({ course, enrollment }) {
 		}
 	};
 
-	const completedDuration = enrollment.complemetLectures?.reduce(
+	const completedDuration = enrollment.completedLectures?.reduce(
 		(duration, lecture) => duration + lecture.duration,
 		0
 	);
@@ -84,6 +86,7 @@ export default function CourseCard({ course, enrollment }) {
 					src={course.image && `http://localhost:3005/images/${course.image}`}
 					alt={course.name}
 					sx={{ height: 190, width: '100%', cursor: 'pointer' }}
+					onClick={() => navigate(`/course/${course._id}/${enrollment._id}`)}
 				/>
 				<Box sx={{ p: 2 }}>
 					<Box

@@ -7,7 +7,8 @@ const AppError = require('./../utlis/appError');
 const popOptions = [
   { path: 'student', select: 'firstName lastName email role' },
   { path: 'course', select: 'name' },
-  { path: 'completedLectures', select: 'name' },
+  { path: 'currentLecture', select: 'name url' },
+  { path: 'completedLectures', select: 'name duration' },
 ];
 
 exports.createEnrollment = controllerFactory.createOne(Enrollment);
@@ -16,38 +17,69 @@ exports.getAllEnrollments = controllerFactory.getAll(Enrollment, popOptions);
 exports.updateEnrollment = controllerFactory.updateOne(Enrollment);
 exports.deleteEnrollment = controllerFactory.deleteOne(Enrollment);
 
-const updateCompletedLectures = (action) => {
-  return catchAsync(async (req, res, next) => {
-    let doc;
-    if (action === 'add') {
-      doc = await Enrollment.findByIdAndUpdate(
-        req.params.id,
-        { $push: { completedLectures: req.body.lectureId } },
-        { new: true, runValidators: true }
-      );
-    } else {
-      doc = await Enrollment.findByIdAndUpdate(
-        req.params.id,
-        { $pull: { completedLectures: req.body.lectureId } },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
-    }
+// const updateCompletedLectures = (action) => {
+//   return catchAsync(async (req, res, next) => {
+//     let doc;
+//     if (action === 'add') {
+//       doc = await Enrollment.findByIdAndUpdate(
+//         req.params.id,
+//         { $push: { completedLectures: req.body.lectureId } },
+//         { new: true, runValidators: true }
+//       );
+//     } else {
+//       doc = await Enrollment.findByIdAndUpdate(
+//         req.params.id,
+//         { $pull: { completedLectures: req.body.lectureId } },
+//         {
+//           new: true,
+//           runValidators: true,
+//         }
+//       );
+//     }
 
-    if (!doc) {
-      return next(new AppError('No document found with that ID', 404));
-    }
+//     if (!doc) {
+//       return next(new AppError('No document found with that ID', 404));
+//     }
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        data: doc,
-      },
-    });
+//     res.status(200).json({
+//       status: 'success',
+//       data: {
+//         data: doc,
+//       },
+//     });
+//   });
+// };
+
+exports.updateCompletedLectures = catchAsync(async (req, res, next) => {
+  let doc;
+  if (req.body.action === 'add') {
+    doc = await Enrollment.findByIdAndUpdate(
+      req.params.id,
+      { $push: { completedLectures: req.body.lectureId } },
+      { new: true, runValidators: true }
+    );
+  } else {
+    doc = await Enrollment.findByIdAndUpdate(
+      req.params.id,
+      { $pull: { completedLectures: req.body.lectureId } },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+  }
+
+  if (!doc) {
+    return next(new AppError('No document found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: doc,
+    },
   });
-};
+});
 
-exports.addCompletedLecture = updateCompletedLectures('add');
-exports.deleteCompletedLecture = updateCompletedLectures('delete');
+// exports.addCompletedLecture = updateCompletedLectures('add');
+// exports.deleteCompletedLecture = updateCompletedLectures('delete');

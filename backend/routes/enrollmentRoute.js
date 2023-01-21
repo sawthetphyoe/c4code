@@ -5,8 +5,9 @@ const router = express.Router();
 
 router
   .route('/lectures/:id')
-  .patch(enrollmentController.addCompletedLecture)
-  .delete(enrollmentController.deleteCompletedLecture);
+  .patch(enrollmentController.updateCompletedLectures);
+// .patch(enrollmentController.addCompletedLecture)
+// .delete(enrollmentController.deleteCompletedLecture);
 
 router
   .route('/')

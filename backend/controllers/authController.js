@@ -160,7 +160,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.changePassword = catchAsync(async (req, res, next) => {
-  console.log(req.user);
+  // console.log(req.user);
   // 1) Get user based on POSTed email
   const user = await User.findById(req.user._id);
   if (!user) {

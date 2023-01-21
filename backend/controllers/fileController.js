@@ -61,25 +61,26 @@ exports.createFile = catchAsync(async (req, res, next) => {
     return next(new AppError('Please attach a file!', 404));
   }
 
-  const course = await Course.findById(req.body.course);
-
-  if (!course) {
-    return next(new AppError('No course found with that ID!', 404));
-  }
-
   req.body.name = req.file.filename;
 
   req.body.uploadedBy = req.user._id;
 
   const doc = await File.create(req.body);
 
-  if (req.user.role !== 'student') {
+  if (req.body.course && req.user.role !== 'student') {
+    const course = await Course.findById(req.body.course);
+
+    if (!course) {
+      return next(new AppError('No course found with that ID!', 404));
+    }
+
     await Course.findByIdAndUpdate(
       req.body.course,
       { $push: { files: doc._id } },
       { new: true, runValidators: true }
     );
   }
+
   res.status(201).json({
     status: 'success',
     data: {

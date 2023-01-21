@@ -67,6 +67,8 @@ export default function EditEnrollmentOverlay({
 		handleCancel();
 	};
 
+	const student = unchangedEnrollment.student;
+
 	return (
 		<div>
 			{results.isLoading && <LoadingBar />}
@@ -86,7 +88,7 @@ export default function EditEnrollmentOverlay({
 					}}
 				>
 					<Typography sx={{ fontSize: 20, fontWeight: 'bold' }}>
-						Assign a new course
+						Edit Enrollment for {`${student.firstName} ${student.lastName}`}
 					</Typography>
 					<IconButton onClick={() => handleClose()}>
 						<CloseRoundedIcon sx={{ color: 'white' }} />

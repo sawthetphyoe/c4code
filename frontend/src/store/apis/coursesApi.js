@@ -10,7 +10,7 @@ const coursesApi = createApi({
 		return {
 			createCourse: builder.mutation({
 				invalidatesTags: (result, error, course) =>
-					result ? [{ type: 'course' }, { type: 'category' }] : [],
+					result ? ['allCourse', { type: 'category' }] : [],
 				query: (course) => {
 					return {
 						url: 'courses',
@@ -36,6 +36,7 @@ const coursesApi = createApi({
 								...result.data.data.map((course) => {
 									return { type: 'course', id: course._id };
 								}),
+								'allCourse',
 						  ]
 						: [],
 				query: () => {

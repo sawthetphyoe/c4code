@@ -115,6 +115,28 @@ const usersApi = createApi({
 					};
 				},
 			}),
+			changeUserPhoto: builder.mutation({
+				invalidatesTags: (result, error) =>
+					result ? [{ type: 'loginUser' }] : [],
+				query: (data) => {
+					return {
+						url: 'users/me',
+						method: 'PATCH',
+						body: data,
+					};
+				},
+			}),
+			changePassword: builder.mutation({
+				invalidatesTags: (result, error) =>
+					result ? [{ type: 'loginUser' }] : [],
+				query: (data) => {
+					return {
+						url: 'users/updateMyPassword',
+						method: 'POST',
+						body: data,
+					};
+				},
+			}),
 			createEnrollment: builder.mutation({
 				invalidatesTags: (result, error, data) =>
 					result ? ['allEnrol', { type: 'user', id: data.student }] : [],
@@ -183,6 +205,17 @@ const usersApi = createApi({
 					};
 				},
 			}),
+			updateCompletedLecture: builder.mutation({
+				invalidatesTags: (result, error, data) =>
+					result ? [{ type: 'enrol', id: data.enrollmentId }] : [],
+				query: (data) => {
+					return {
+						url: `enrollments/lectures/${data.enrollmentId}`,
+						method: 'PATCH',
+						body: data.body,
+					};
+				},
+			}),
 		};
 	},
 });
@@ -197,10 +230,13 @@ export const {
 	useCheckLoginQuery,
 	useUserLogoutMutation,
 	useResetPasswordMutation,
+	useChangeUserPhotoMutation,
+	useChangePasswordMutation,
 	useCreateEnrollmentMutation,
 	useDeleteEnrollmentMutation,
 	useUpdateEnrollmentMutation,
 	useGetAllEnrollmentsQuery,
 	useGetEnrollmentQuery,
+	useUpdateCompletedLectureMutation,
 } = usersApi;
 export { usersApi };

@@ -13,10 +13,6 @@ const fileSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  relatedCourse: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Course',
-  },
 });
 
 const File = mongoose.model('File', fileSchema);

@@ -26,6 +26,10 @@ const enrollmentSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  currentLecture: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Lecture',
+  },
 });
 
 const Enrollment = mongoose.model('Enrollment', enrollmentSchema);
