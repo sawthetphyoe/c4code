@@ -1,7 +1,10 @@
 const express = require('express');
 const lectureController = require('./../controllers/lectureController');
+const authController = require('./../controllers/authController');
 
 const router = express.Router();
+
+router.use(authController.checkLogin);
 
 router
   .route('/')

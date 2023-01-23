@@ -11,9 +11,11 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import LocalLibraryRoundedIcon from '@mui/icons-material/LocalLibraryRounded';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import CourseContentTab from '../courses/CourseContentTab';
 import CourseUserTab from '../courses/CourseUserTab';
 import CourseFileTab from '../courses/CourseFileTab';
+import CourseReviewTab from '../courses/CourseReviewTab';
 
 const tabHeadings = [
 	{
@@ -31,6 +33,10 @@ const tabHeadings = [
 	{
 		title: 'Files',
 		icon: <FolderRoundedIcon />,
+	},
+	{
+		title: 'Reviews',
+		icon: <RateReviewRoundedIcon />,
 	},
 ];
 
@@ -66,8 +72,9 @@ export default function CourseInfoPage() {
 						tabs={[
 							<CourseInfoTab />,
 							<CourseContentTab />,
-							<CourseUserTab />,
+							<CourseUserTab course={course} />,
 							<CourseFileTab />,
+							<CourseReviewTab />,
 						]}
 					/>
 				</Box>

@@ -6,10 +6,16 @@ import {
 	DialogActions,
 	DialogTitle,
 	IconButton,
+	Table,
+	TableBody,
+	TableContainer,
+	TableHead,
 	Typography,
 } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+
 import {
 	useGetAllSectionsQuery,
 	useGetCourseQuery,
@@ -23,6 +29,7 @@ import Error from '../ultis/Error';
 import StudentSectionAccordion from '../students/StudentSectionAccordion';
 import { useCallback, useEffect, useState } from 'react';
 import YouTube from 'react-youtube';
+import TableRow from '../components/TableRow';
 
 const videoOptions = {
 	height: 585,
@@ -34,6 +41,8 @@ const videoOptions = {
 		origin: 'http://localhost:3000',
 	},
 };
+
+const tableHeads = ['NAME', 'UPLOADED BY', 'UPLOADED AT', ''];
 
 export default function CoursePlayPage() {
 	const { courseId, enrollmentId } = useParams();
@@ -66,6 +75,8 @@ export default function CoursePlayPage() {
 			value: courseId,
 		},
 	]);
+
+	const [downloadFile, setDownloadFile] = useState('');
 
 	useEffect(() => {
 		if (enrolData && !enrolError) {
@@ -103,6 +114,22 @@ export default function CoursePlayPage() {
 		});
 	};
 
+	const handleFileDownload = (filename) => {
+		setDownloadFile(filename);
+		const link = document.createElement('a');
+		link.id = 'helper-link';
+		link.target = '_blank';
+		link.download = `${filename.split('---')[1]}`;
+		link.href = `http://localhost:3005/files/${filename}`;
+		link.click();
+	};
+
+	useEffect(() => {
+		if (!downloadFile) return;
+		const helperLink = document.getElementById('helper-link');
+		if (helperLink) return () => helperLink.remove();
+	}, [downloadFile]);
+
 	if (courseLoading || enrolLoading || sectionLoading) return <LoadingBar />;
 
 	if (courseError) return <Error message={courseError.data.message} />;
@@ -133,6 +160,30 @@ export default function CoursePlayPage() {
 	const enrollment = enrolData.data.data;
 
 	const courseSections = sectionData.data.data;
+
+	const files = course.files.map((file) => {
+		return {
+			id: file._id,
+			name: file.name,
+			info: [
+				file.name.split('---')[1],
+				file.uploadedBy.firstName + ' ' + file.uploadedBy.lastName,
+				new Date(file.uploadedAt).toLocaleDateString('en-UK'),
+			],
+		};
+	});
+
+	const renderedTableHeads = <TableRow data={tableHeads} />;
+
+	const renderedTableRows = files.map((file) => (
+		<TableRow
+			key={file.id}
+			id={file.id}
+			name={file.name}
+			data={file.info}
+			onDownload={handleFileDownload}
+		/>
+	));
 
 	const renderedSections = courseSections.map((sec) => (
 		<StudentSectionAccordion
@@ -188,6 +239,29 @@ export default function CoursePlayPage() {
 					</Typography>
 					{renderedSections}
 				</Box>
+			</Box>
+
+			<Box sx={{ mt: 12 }}>
+				<Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+					<PlayArrowRoundedIcon
+						sx={{ fontSize: 36, color: '#574F7D', padding: 0 }}
+					/>
+					<Typography variant="h6" sx={{ fontSize: 24 }}>
+						Course Materials
+					</Typography>
+				</Box>
+				{course.files.length > 0 ? (
+					<TableContainer sx={{ p: 4 }}>
+						<Table stickyHeader>
+							<TableHead>{renderedTableHeads}</TableHead>
+							<TableBody>{renderedTableRows}</TableBody>
+						</Table>
+					</TableContainer>
+				) : (
+					<Typography variant="h4" sx={{ textAlign: 'center', p: 8 }}>
+						No files yet!
+					</Typography>
+				)}
 			</Box>
 		</Container>
 	);

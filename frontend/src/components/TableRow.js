@@ -1,9 +1,45 @@
-import { IconButton, TableRow as MuiTableRow } from '@mui/material';
+import { IconButton, TableRow as MuiTableRow, Typography } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import LinearProgress, {
+	linearProgressClasses,
+} from '@mui/material/LinearProgress';
+import { Box } from '@mui/system';
+import PropTypes from 'prop-types';
+
+const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+	height: 8,
+	borderRadius: 3,
+	[`&.${linearProgressClasses.colorPrimary}`]: {
+		backgroundColor: theme.palette.grey[400],
+	},
+	[`& .${linearProgressClasses.bar}`]: {
+		borderRadius: 3,
+		backgroundColor: '#6F6698',
+	},
+}));
+
+function LinearProgressWithLabel(props) {
+	return (
+		<Box sx={{ display: 'flex', alignItems: 'center' }}>
+			<Box sx={{ width: '100%', mr: 1 }}>
+				<BorderLinearProgress variant="determinate" {...props} />
+			</Box>
+			<Box sx={{ minWidth: 35 }}>
+				<Typography variant="body2" color="text.secondary">{`${Math.round(
+					props.value
+				)}%`}</Typography>
+			</Box>
+		</Box>
+	);
+}
+
+LinearProgressWithLabel.propTypes = {
+	value: PropTypes.number.isRequired,
+};
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -22,16 +58,13 @@ const StyledTableRow = styled(MuiTableRow)(({ theme }) => ({
 	'&:nth-of-type(even)': {
 		backgroundColor: theme.palette.action.hover,
 	},
-	// hide last border
-	// '&:last-child td, &:last-child th': {
-	// 	border: 0,
-	// },
 }));
 
 export default function TableRow({
 	id,
 	name,
 	rawData,
+	progress,
 	data,
 	onEdit,
 	onDownload,
@@ -43,6 +76,12 @@ export default function TableRow({
 	return (
 		<StyledTableRow>
 			{itemCells}
+
+			{progress !== undefined && (
+				<StyledTableCell>
+					<LinearProgressWithLabel value={progress} />
+				</StyledTableCell>
+			)}
 
 			{onEdit && (
 				<StyledTableCell style={{ padding: 0 }}>

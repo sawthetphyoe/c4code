@@ -128,6 +128,7 @@ export default function StudentFileTab({ user }) {
 				alignItems: 'flex-start',
 				gap: 4,
 				pb: 4,
+				minHeight: 550,
 			}}
 		>
 			{(uploadResults.isLoading || deleteResults.isLoading) && <LoadingBar />}

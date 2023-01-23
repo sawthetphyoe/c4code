@@ -7,7 +7,7 @@ import {
 	TableHead,
 	Typography,
 } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import TableRow from '../components/TableRow';
 import {
 	useDeleteEnrollmentMutation,
@@ -18,9 +18,19 @@ import LoadingBar from '../ultis/LoadingBar';
 import SkeletonList from '../ultis/SkeletonList';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 
-const tableHeads = ['NAME', 'START DATE', 'END DATE', ''];
+const instructorTableHeads = ['NAME', 'START DATE', 'END DATE', '', ''];
 
-export default function CourseUserTab() {
+const studentTableHeads = [
+	'NAME',
+	'START DATE',
+	'END DATE',
+	'PROGRESS',
+	'',
+	'',
+];
+
+export default function CourseUserTab({ course }) {
+	const navigate = useNavigate();
 	const { id } = useParams();
 	const { data, error, isLoading, isFetching } = useGetAllEnrollmentsQuery([
 		{
@@ -32,6 +42,10 @@ export default function CourseUserTab() {
 
 	const handleEnrollmentDelete = (id) => {
 		deleteEnrollment(id);
+	};
+
+	const handleUserEdit = (enrollment) => {
+		navigate(`/users/${enrollment.student._id}`);
 	};
 
 	if (isLoading)
@@ -76,7 +90,9 @@ export default function CourseUserTab() {
 		};
 	});
 
-	const renderedTableHeads = <TableRow data={tableHeads} />;
+	const renderedInstructorTableHeads = <TableRow data={instructorTableHeads} />;
+
+	const renderedStudentTableHeads = <TableRow data={studentTableHeads} />;
 
 	const renderedInstructorRows = enrollments
 		.filter((enrol) => enrol.raw.student.role === 'instructor')
@@ -86,21 +102,36 @@ export default function CourseUserTab() {
 				rawData={enrol.raw}
 				id={enrol.id}
 				data={enrol.info}
+				onEdit={handleUserEdit}
 				onDelete={handleEnrollmentDelete}
 			/>
 		));
 
 	const renderedStudentRows = enrollments
 		.filter((enrol) => enrol.raw.student.role === 'student')
-		.map((enrol) => (
-			<TableRow
-				key={enrol.id}
-				rawData={enrol.raw}
-				id={enrol.id}
-				data={enrol.info}
-				onDelete={handleEnrollmentDelete}
-			/>
-		));
+		.map((enrol) => {
+			const completedDuration = enrol.raw.completedLectures?.reduce(
+				(duration, lecture) => duration + lecture.duration,
+				0
+			);
+
+			const progress =
+				completedDuration && course.duration
+					? Math.round((completedDuration / course.duration) * 100)
+					: 0;
+
+			return (
+				<TableRow
+					key={enrol.id}
+					rawData={enrol.raw}
+					id={enrol.id}
+					data={enrol.info}
+					progress={progress}
+					onEdit={handleUserEdit}
+					onDelete={handleEnrollmentDelete}
+				/>
+			);
+		});
 
 	return (
 		<Container
@@ -124,7 +155,7 @@ export default function CourseUserTab() {
 					display: 'flex',
 					flexDirection: 'column',
 					alignItems: 'flex-start',
-					width: '100%',
+					width: '70%',
 				}}
 			>
 				<Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
@@ -137,7 +168,7 @@ export default function CourseUserTab() {
 				</Box>
 				<TableContainer sx={{ maxHeight: 800, p: 2 }}>
 					<Table stickyHeader>
-						<TableHead>{renderedTableHeads}</TableHead>
+						<TableHead>{renderedInstructorTableHeads}</TableHead>
 						<TableBody>{renderedInstructorRows}</TableBody>
 					</Table>
 				</TableContainer>
@@ -161,7 +192,7 @@ export default function CourseUserTab() {
 				</Box>
 				<TableContainer sx={{ maxHeight: 800, p: 2 }}>
 					<Table stickyHeader>
-						<TableHead>{renderedTableHeads}</TableHead>
+						<TableHead>{renderedStudentTableHeads}</TableHead>
 						<TableBody>{renderedStudentRows}</TableBody>
 					</Table>
 				</TableContainer>

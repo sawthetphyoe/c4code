@@ -6,6 +6,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { AppBar, Grid, IconButton, Typography } from '@mui/material';
 import { useCreateCategoryMutation } from '../store';
 import LoadingBar from '../ultis/LoadingBar';
+import Error from '../ultis/Error';
 
 export default function AddUserOverlay({ open, onClose }) {
 	const [createCategory, results] = useCreateCategoryMutation();
@@ -42,6 +43,8 @@ export default function AddUserOverlay({ open, onClose }) {
 	return (
 		<div>
 			{results.isLoading && <LoadingBar />}
+
+			{results.isError && <Error message={results.error.data.message} />}
 
 			<Dialog open={open} onClose={() => handleClose()} maxWidth="md">
 				<AppBar

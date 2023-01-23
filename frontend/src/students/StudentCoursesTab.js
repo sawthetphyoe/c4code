@@ -20,7 +20,12 @@ export default function StudentCourseTab({ user }) {
 		data: courseData,
 		error: courseError,
 		isLoading: courseLoading,
-	} = useGetAllCoursesQuery();
+	} = useGetAllCoursesQuery([
+		{
+			key: 'active',
+			value: true,
+		},
+	]);
 
 	if (enrolLoading || courseLoading) return <LoadingBar />;
 
@@ -62,7 +67,7 @@ export default function StudentCourseTab({ user }) {
 	});
 
 	return (
-		<Container maxWidth="lg" sx={{ mt: 4 }}>
+		<Container maxWidth="lg" sx={{ mt: 4, minHeight: 550 }}>
 			<Grid container spacing={2}>
 				{renderedCourses}
 			</Grid>

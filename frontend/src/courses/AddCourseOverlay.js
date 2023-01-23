@@ -83,6 +83,8 @@ export default function AddCourseOverlay({ open, onClose }) {
 		<div>
 			{results.isLoading && <LoadingBar />}
 
+			{results.isError && <Error message={results.error.data.message} />}
+
 			<Dialog open={open} onClose={() => handleClose()} maxWidth="md">
 				<AppBar
 					position="relative"

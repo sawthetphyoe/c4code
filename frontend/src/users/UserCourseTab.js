@@ -79,7 +79,7 @@ export default function UserCourseTab() {
 					+ assign new course
 				</Button>
 				<Typography variant="h4" sx={{ alignSelf: 'center', p: 4 }}>
-					No Courses assigned to this user!
+					No Courses!
 				</Typography>
 				<AddEnrollmentOverlay open={modalOpen} onClose={onModalClose} />
 			</Container>

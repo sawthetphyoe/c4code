@@ -1,7 +1,10 @@
 const express = require('express');
 const enrollmentController = require('./../controllers/enrollmentController');
+const authController = require('./../controllers/authController');
 
 const router = express.Router();
+
+router.use(authController.checkLogin);
 
 router
   .route('/lectures/:id')

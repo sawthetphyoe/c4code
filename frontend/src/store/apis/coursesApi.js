@@ -39,9 +39,13 @@ const coursesApi = createApi({
 								'allCourse',
 						  ]
 						: [],
-				query: () => {
+				query: (options) => {
+					// options = { key: 'student', value: 'ID'}
+					const queryString = options
+						? '?' + options.map((opt) => `${opt.key}=${opt.value}`).join('&')
+						: '';
 					return {
-						url: 'courses',
+						url: `courses${queryString}`,
 						method: 'GET',
 					};
 				},

@@ -143,14 +143,8 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     return next(new AppError('No user found with that ID', 404));
   }
 
-  if (user.role === 'super-admin' && req.user.role !== 'super-admin') {
+  if (user.role === 'super-admin') {
     return next(new AppError('You cannot update a super-admin account!', 404));
-  }
-
-  if (req.body.role === 'super-admin' && req.user.role !== 'super-admin') {
-    return next(
-      new AppError('You do not have permission to perform this action.', 404)
-    );
   }
 
   let oldImage;
@@ -178,10 +172,6 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
-
-  if (!doc) {
-    return next(new AppError('No document found with that ID', 404));
-  }
 
   // If there is an old profile image Delete it
   if (oldImage) {
