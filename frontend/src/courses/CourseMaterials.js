@@ -80,7 +80,11 @@ export default function CourseMaterials() {
 					<Stack divider={<Divider />}>{sections}</Stack>
 				)}
 			</Container>
-			<AddSectionOverlay open={modalOpen} onClose={onModalClose} />
+			<AddSectionOverlay
+				sectionIndex={sections.length + 1}
+				open={modalOpen}
+				onClose={onModalClose}
+			/>
 		</Box>
 	);
 }

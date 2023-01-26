@@ -8,8 +8,12 @@ const courseSchema = new mongoose.Schema({
   },
   description: {
     type: String,
+    required: [true, 'Please provide a short description for the course'],
   },
-  code: String,
+  code: {
+    type: String,
+    required: [true, 'Please provide a course code'],
+  },
   image: String,
   ratingsAverage: { type: Number, default: 0 },
   numOfRating: { type: Number, default: 0 },
@@ -29,6 +33,7 @@ const courseSchema = new mongoose.Schema({
   category: {
     type: mongoose.Schema.ObjectId,
     ref: 'Category',
+    required: [true, 'Please provide a category for the course'],
   },
   createdAt: {
     type: Date,

@@ -104,7 +104,6 @@ export default function EditReviewOverlay({ review, open, onClose }) {
 						sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
 					>
 						<Rating
-							required
 							precision={0.5}
 							value={courseReview.rating}
 							onChange={handleRatingChange}
@@ -122,7 +121,6 @@ export default function EditReviewOverlay({ review, open, onClose }) {
 					</Grid>
 					<Grid item sm={12}>
 						<TextField
-							required
 							fullWidth
 							// label="Description*"
 							multiline

@@ -6,10 +6,7 @@ const router = express.Router();
 
 router.use(authController.checkLogin);
 
-router
-  .route('/')
-  .get(lectureController.getAllLectures)
-  .post(lectureController.createLecture);
+router.route('/').get(lectureController.getAllLectures);
 
 router
   .route('/:id')
@@ -17,4 +14,7 @@ router
   .patch(lectureController.updateLecture)
   .delete(lectureController.deleteLecture);
 
+////////// Routes restricted to Super-Admin or Admin //////////
+router.use(authController.restrictTo('super-admin', 'admin'));
+router.post('/', lectureController.createLecture);
 module.exports = router;

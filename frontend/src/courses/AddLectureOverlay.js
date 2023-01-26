@@ -14,6 +14,8 @@ import {
 import { useCreateLectureMutation, useUpdateCourseMutation } from '../store';
 import YouTube from 'react-youtube';
 import { useParams } from 'react-router-dom';
+import LoadingBar from '../ultis/LoadingBar';
+import Error from '../ultis/Error';
 
 // const pattern =
 // 	/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})?$/;
@@ -32,14 +34,19 @@ const videoOptions = {
 	},
 };
 
-export default function AddLectureOverlay({ sectionId, open, onClose }) {
+export default function AddLectureOverlay({
+	lectureIndex,
+	sectionId,
+	open,
+	onClose,
+}) {
 	const { id } = useParams();
 	const [createLecture, results] = useCreateLectureMutation();
 	const [updateCourse] = useUpdateCourseMutation();
 	const [videoId, setVideoId] = useState('');
 	const [lecture, setLecture] = useState({
 		name: '',
-		index: 1,
+		index: lectureIndex,
 		section: sectionId,
 		duration: '',
 		url: '',
@@ -73,13 +80,13 @@ export default function AddLectureOverlay({ sectionId, open, onClose }) {
 	const handleCancel = useCallback(() => {
 		setLecture({
 			name: '',
-			index: 1,
+			index: lectureIndex,
 			section: sectionId,
 			duration: '',
 			url: '',
 		});
 		setVideoId('');
-	}, [sectionId]);
+	}, [sectionId, lectureIndex]);
 
 	const handleAddLectureSubmit = (e) => {
 		e.preventDefault();
@@ -102,6 +109,8 @@ export default function AddLectureOverlay({ sectionId, open, onClose }) {
 	return (
 		<div>
 			<Dialog open={open} onClose={() => handleClose()} maxWidth="xl">
+				{results.isLoading && <LoadingBar />}
+				{results.isError && <Error message={results.error.data.message} />}
 				<Container sx={{ minHeight: 900, width: 1008 }}>
 					<AppBar
 						position="relative"
@@ -155,6 +164,7 @@ export default function AddLectureOverlay({ sectionId, open, onClose }) {
 									fullWidth
 									required
 									label="Youtube URL"
+									helperText="Video URL must be a valid format like 'https://youtu.be/<<VIDEOID>>'"
 									value={lecture.url}
 									onChange={handleUrlChange}
 								/>

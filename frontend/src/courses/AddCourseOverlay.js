@@ -116,7 +116,6 @@ export default function AddCourseOverlay({ open, onClose }) {
 				>
 					<Grid item sm={12}>
 						<TextField
-							required
 							fullWidth
 							label="Name"
 							value={course.name}
@@ -125,7 +124,6 @@ export default function AddCourseOverlay({ open, onClose }) {
 					</Grid>
 					<Grid item sm={6}>
 						<TextField
-							required
 							fullWidth
 							label="Course Code"
 							value={course.code}

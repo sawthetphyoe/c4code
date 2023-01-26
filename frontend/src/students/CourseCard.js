@@ -132,7 +132,11 @@ export default function CourseCard({ course, enrollment }) {
 					}}
 					onClick={() => handleRatingClick(review)}
 				>
-					<Rating value={review ? review.rating : 0} readOnly precision={0.5} />
+					<Rating
+						defaultValue={review ? review.rating : 0}
+						readOnly
+						precision={0.5}
+					/>
 					<Typography
 						variant="caption"
 						sx={{ textTransform: 'capitalize', color: '#1e1e1e' }}

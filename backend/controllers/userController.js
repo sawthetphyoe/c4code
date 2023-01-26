@@ -2,6 +2,7 @@ const AppError = require('./../utlis/appError');
 const User = require('./../models/userModel');
 const Enrollment = require('./../models/enrollmentModel');
 const File = require('./../models/fileModel');
+const Review = require('./../models/reviewModel')
 const APIFeatures = require('./../utlis/apiFeatures');
 const catchAsync = require('./../utlis/catchAsync');
 const controllerFactory = require('./ControllerFactory');
@@ -120,15 +121,21 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     return next(new AppError('You cannot delete a super-admin account!', 404));
   }
 
+  if (user.image) {
+    fs.unlink(`${__dirname}/../public/images/${user.image}`, (err) => {
+      if (err) return next(new AppError('Cannot delete this photo', 404));
+    });
+  }
+
   await User.findByIdAndDelete(req.params.id);
 
   await Enrollment.deleteMany({ student: user._id });
 
   await File.deleteMany({ uploadedBy: user._id });
 
-  fs.unlink(`${__dirname}/../public/images/${user.image}`, (err) => {
-    if (err) return next(new AppError('Cannot delete this photo', 404));
-  });
+  await Review.deleteMany({student: user._id});
+
+  awati 
 
   res.status(204).json({
     status: 'success',

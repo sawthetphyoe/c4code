@@ -177,6 +177,7 @@ export default function SectionAccordion({ section, expanded, handleChange }) {
 				onClose={onSecModalClose}
 			/>
 			<AddLectureOverlay
+				lectureIndex={lectures.length + 1}
 				courseId={section.course}
 				sectionId={section._id}
 				open={addLecModalOpen}

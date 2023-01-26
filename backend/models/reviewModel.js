@@ -4,13 +4,11 @@ const Course = require('./courseModel');
 const reviewSchema = new mongoose.Schema({
   review: {
     type: String,
-    required: [true, 'Review cannot be empty'],
+    required: [true, 'Please provide a review.'],
   },
   rating: {
     type: Number,
-    min: 1,
-    max: 5,
-    default: 0,
+    required: [true, 'Please provide a rating'],
   },
   createdAt: {
     type: Date,

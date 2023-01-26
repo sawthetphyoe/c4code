@@ -38,7 +38,7 @@ export default function AddReviewOverlay({ student, course, open, onClose }) {
 	const [hover, setHover] = useState(-1);
 	const [courseReview, setCourseReview] = useState({
 		review: '',
-		rating: 0,
+		rating: null,
 	});
 
 	const handleReviewChange = (e) => {
@@ -46,8 +46,8 @@ export default function AddReviewOverlay({ student, course, open, onClose }) {
 		setEdit(true);
 	};
 
-	const handleRatingChange = (e) => {
-		setCourseReview({ ...courseReview, rating: +e.target.value });
+	const handleRatingChange = (e, value) => {
+		setCourseReview({ ...courseReview, rating: value });
 		setEdit(true);
 	};
 
@@ -59,7 +59,7 @@ export default function AddReviewOverlay({ student, course, open, onClose }) {
 	const handleCancel = () => {
 		setCourseReview({
 			review: '',
-			rating: 0,
+			rating: null,
 		});
 		setEdit(false);
 	};
@@ -110,7 +110,6 @@ export default function AddReviewOverlay({ student, course, open, onClose }) {
 						sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
 					>
 						<Rating
-							required
 							precision={0.5}
 							value={courseReview.rating}
 							onChange={handleRatingChange}
@@ -128,7 +127,6 @@ export default function AddReviewOverlay({ student, course, open, onClose }) {
 					</Grid>
 					<Grid item sm={12}>
 						<TextField
-							required
 							fullWidth
 							// label="Description*"
 							multiline

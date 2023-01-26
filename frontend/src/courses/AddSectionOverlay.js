@@ -7,21 +7,22 @@ import { AppBar, Grid, IconButton, Typography } from '@mui/material';
 import LoadingBar from '../ultis/LoadingBar';
 import { useCreateSectionMutation } from '../store';
 import { useParams } from 'react-router-dom';
+import Error from '../ultis/Error';
 
-export default function AddSectionOverlay({ open, onClose }) {
+export default function AddSectionOverlay({ sectionIndex, open, onClose }) {
 	const { id } = useParams();
 	const [createSection, results] = useCreateSectionMutation();
 	const [edit, setEdit] = useState(false);
 	const [section, setSection] = useState({
 		name: '',
 		course: id,
-		index: 1,
+		index: sectionIndex,
 	});
 
 	const handleCancel = useCallback(() => {
-		setSection({ name: '', index: 1, course: id });
+		setSection({ name: '', index: sectionIndex, course: id });
 		setEdit(false);
-	}, [id]);
+	}, [id, sectionIndex]);
 
 	useEffect(() => {
 		if (results.isSuccess) {
@@ -55,6 +56,8 @@ export default function AddSectionOverlay({ open, onClose }) {
 		<div>
 			{results.isLoading && <LoadingBar />}
 
+			{results.isError && <Error message={results.error.data.message} />}
+
 			<Dialog open={open} onClose={() => handleClose()} maxWidth="md">
 				<AppBar
 					position="relative"
@@ -86,7 +89,6 @@ export default function AddSectionOverlay({ open, onClose }) {
 				>
 					<Grid item sm={2}>
 						<TextField
-							required
 							fullWidth
 							type="number"
 							label="Order"
@@ -96,7 +98,6 @@ export default function AddSectionOverlay({ open, onClose }) {
 					</Grid>
 					<Grid item sm={10}>
 						<TextField
-							required
 							fullWidth
 							label="Name"
 							value={section.name}

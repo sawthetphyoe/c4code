@@ -107,13 +107,23 @@ export default function Tab({ heads, tabs, student }) {
 				{student ? (
 					<Box sx={{ bgcolor: '#1E1E1E', width: '100%' }}>
 						<Container maxWidth="lg">
-							<StyledTabs value={value} onChange={handleChange}>
+							<StyledTabs
+								selectionFollowsFocus
+								aria-label="Tabs where selection follows focus"
+								value={value}
+								onChange={handleChange}
+							>
 								{renderedHeads}
 							</StyledTabs>
 						</Container>
 					</Box>
 				) : (
-					<Tabs value={value} onChange={handleChange}>
+					<Tabs
+						selectionFollowsFocus
+						aria-label="Tabs where selection follows focus"
+						value={value}
+						onChange={handleChange}
+					>
 						{renderedHeads}
 					</Tabs>
 				)}

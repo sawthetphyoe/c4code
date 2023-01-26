@@ -6,6 +6,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { AppBar, Grid, IconButton, MenuItem, Typography } from '@mui/material';
 import { useCreateUserMutation } from '../store';
 import LoadingBar from '../ultis/LoadingBar';
+import Error from '../ultis/Error';
 
 const roles = [
 	{
@@ -87,6 +88,8 @@ export default function AddUserOverlay({ open, onClose }) {
 		<div>
 			{results.isLoading && <LoadingBar />}
 
+			{results.isError && <Error message={results.error.data.message} />}
+
 			<Dialog open={open} onClose={() => handleClose()} maxWidth="md">
 				<AppBar
 					position="relative"
@@ -117,7 +120,6 @@ export default function AddUserOverlay({ open, onClose }) {
 				>
 					<Grid item sm={6}>
 						<TextField
-							required
 							fullWidth
 							label="First Name"
 							value={user.firstName}
@@ -126,7 +128,6 @@ export default function AddUserOverlay({ open, onClose }) {
 					</Grid>
 					<Grid item sm={6}>
 						<TextField
-							required
 							fullWidth
 							label="Last Name"
 							value={user.lastName}
@@ -135,7 +136,6 @@ export default function AddUserOverlay({ open, onClose }) {
 					</Grid>
 					<Grid item sm={12}>
 						<TextField
-							required
 							fullWidth
 							label="Email Address"
 							value={user.email}

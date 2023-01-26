@@ -147,6 +147,10 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no user with this ID.', 404));
   }
 
+  if (user.role === 'super-admin') {
+    return next(new AppError('You cannot update a super-admin account!', 404));
+  }
+
   user.password = process.env.DEFAULT_USER_PASSWORD;
   user.passwordConfirm = process.env.DEFAULT_USER_PASSWORD;
   await user.save();

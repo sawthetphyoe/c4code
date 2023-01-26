@@ -28,7 +28,7 @@ export default function CourseSummary() {
 			</Typography>
 			<Typography variant="body2">{course.category.name}</Typography>
 			<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-				<Rating value={course.ratingsAverage} readOnly precision={0.5} />
+				<Rating defaultValue={course.ratingsAverage} readOnly precision={0.5} />
 				<Typography variant="caption">
 					({course.numOfRating || 0} Reviews)
 				</Typography>
