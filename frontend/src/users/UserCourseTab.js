@@ -86,17 +86,20 @@ export default function UserCourseTab() {
 		);
 
 	const enrollments = data.data.data.map((enrol) => {
+
+		const info = [
+			enrol.course.name,
+			new Date(enrol.startDate).toLocaleDateString('en-UK'),
+			enrol.endDate
+				? new Date(enrol.endDate).toLocaleDateString('en-UK')
+				: '-',
+		]
+
+		if (enrol.student.role !== 'student') info.push('-')
 		return {
 			id: enrol._id,
 			raw: enrol,
-			info: [
-				enrol.course.name,
-				new Date(enrol.startDate).toLocaleDateString('en-UK'),
-				enrol.endDate
-					? new Date(enrol.endDate).toLocaleDateString('en-UK')
-					: '-',
-				enrol.completed ? 'Completed' : 'In Progress',
-			],
+			info,
 		};
 	});
 
@@ -104,16 +107,30 @@ export default function UserCourseTab() {
 
 	const renderedTableHeads = <TableRow data={tableHeads} />;
 
-	const renderedTableRows = enrollments.map((enrol) => (
-		<TableRow
+	const renderedTableRows = enrollments.map((enrol) => {
+		const completedDuration = enrol.raw.completedLectures?.reduce(
+			(duration, lecture) => duration + lecture.duration,
+			0
+		);
+
+		const progress =
+			completedDuration && enrol.raw.course.duration
+				? Math.round((completedDuration / enrol.raw.course.duration) * 100)
+				: 0;
+
+		// console.log(enrol.raw.student.role);
+		return (
+			<TableRow
 			key={enrol.id}
 			rawData={enrol.raw}
 			id={enrol.id}
+			progress={enrol.raw.student.role === 'student' ? progress : undefined}
 			data={enrol.info}
 			onEdit={handleEnrollmentEdit}
 			onDelete={handleEnrollmentDelete}
-		/>
-	));
+			/>
+			)
+		})
 
 	return (
 		<Container

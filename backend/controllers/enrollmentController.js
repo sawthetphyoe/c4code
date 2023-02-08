@@ -6,7 +6,7 @@ const AppError = require('./../utlis/appError');
 
 const popOptions = [
   { path: 'student', select: 'firstName lastName email role' },
-  { path: 'course', select: 'name' },
+  { path: 'course', select: 'name duration' },
   { path: 'currentLecture', select: 'name url' },
   { path: 'completedLectures', select: 'name duration' },
 ];

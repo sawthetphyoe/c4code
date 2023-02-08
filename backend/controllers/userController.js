@@ -135,7 +135,6 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 
   await Review.deleteMany({student: user._id});
 
-  awati 
 
   res.status(204).json({
     status: 'success',
