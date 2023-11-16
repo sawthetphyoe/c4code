@@ -19,7 +19,7 @@
 Run `npm install` for both frontend and backend folders
 Please use 'saw1@gmail.com' and 'asdf1234' for super-admin log in username and password
 
-The application is currently connected to a database hosted on MongoDB Atlas and it should be able to run any further configuration.
+The application is currently connected to a database hosted on MongoDB Atlas and it should be able to run without any further configuration.
 
 If the cloud database is not availabe for some reasons,
 
