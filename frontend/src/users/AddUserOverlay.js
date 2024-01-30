@@ -28,7 +28,7 @@ const roles = [
 ];
 
 export default function AddUserOverlay({ open, onClose }) {
-	const [createUser, results] = useCreateUserMutation();
+	const [createUser, results ] = useCreateUserMutation();
 	const [edit, setEdit] = useState(false);
 	const [user, setUser] = useState({
 		firstName: '',

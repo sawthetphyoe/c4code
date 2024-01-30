@@ -93,6 +93,9 @@ export default function LoginPage() {
 							variant="contained"
 							disabled={!edit}
 							type="submit"
+							style={{
+								height: 52,
+							}}
 						>
 							Login
 						</Button>

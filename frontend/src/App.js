@@ -34,7 +34,7 @@ const theme = createTheme({
 			styleOverrides: {
 				maxWidthXl: {
 					'&.MuiContainer-maxWidthXl': {
-						maxWidth: 1530,
+						maxWidth: 1440,
 					},
 				},
 				maxWidthLg: {
